@@ -1,0 +1,64 @@
+Plán rozdělelní práce
+
+Tým
+
+xtobol06 - vedoucí
+xhalen00
+xsteti05
+xtesar43
+
+Úkoly
+ - makefile - xtobol06
+ - dokumentace
+   - programová - xtesar43
+   - uživatelská - xsteti05
+ - testy - xtobol06
+ - knihovna - xhalen00
+ - GUI - xvsichni00
+ - mockup - xsteti05
+ - instalátory - xtobol06
+ - profiling - xsteti05
+
+Termíny
+ - 6 týdnů od plánu do odevzdání
+ - deadliny jsou zarovnány na středy, kdy se potkáváme
+
+1. týden - do 22. 3.
+ - makefile
+ - doxyfile
+ - testy + rozhraní
+
+2. týden - do 29. 3.
+ - vývoj knihovny
+ - další testy podle potřeby
+
+3. týden - do 5. 4.
+ - profiling
+ - napojení na GUI
+
+4. týden - do 12. 4.
+ - GUI
+ - uživatelská dokumentace
+
+5. týden - do 19. 4.
+ - mockup
+ - instalátory
+ - debugging
+
+6. týden - do 25. 4. - ODEVZDÁNÍ
+ - zkouška instalace
+ - doladění detailů
+ - odevzdání
+
+Komunikace
+ - prezenční schůze každý týden ve středu 17:00
+ - online komunikace na Discordu
+
+Repozitář
+ - https://github.com/NobodySpy/IVS-project2
+ - ivskontrola má přístup k repozitáři
+ - v README.md je podrobnější popis git workflow
+
+Prostředí a jazyk
+ - OS - Ubuntu 22.04 – 64bit
+ - C++ a Qt
