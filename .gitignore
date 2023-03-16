@@ -1,3 +1,21 @@
+# submition sir
+odevzdani
+
+# pdfs
+*.pdf
+
+# Archives
+*.zip
+
+# all in src
+src/**
+
+# except for
+!src/Doxyfile
+!src/Makefile
+!src/*.cpp
+!src/*.hpp
+
 # Prerequisites
 *.d
 
