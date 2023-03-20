@@ -12,9 +12,10 @@ PROFILE_SRCS = $(wildcard $(PROFILE)*.cpp)
 PROJ_OBJS = $(patsubst %.c,%.o,$(PROJ_SRCS))
 PROFILE_OBJS = $(patsubst %.c,%.o,$(PROFILE_SRCS))
 
-
-
 DEPS = $(SRCS:.c=.d)
+
+EXECS = $(PROJ) $(PROFILE)
+OBJS = $(PROJ_OBJS) $(PROFILE_OBJS)
 
 .PHONY: clean all
 
