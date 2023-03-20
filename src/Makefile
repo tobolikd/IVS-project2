@@ -42,7 +42,8 @@ pack_is:
 	cd .. && zip -r $(ZIP) hodnoceni.txt src dokumentace.pdf odevzdani.txt
 
 test:
-	cd build && cmake .. && cmake --build .
+	mkdir -p build
+	cd build && cmake .. && cmake --build . && ./tests-all
 
 doc:
 	doxygen
