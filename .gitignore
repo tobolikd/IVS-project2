@@ -13,6 +13,8 @@ src/**
 # except for
 !src/Doxyfile
 !src/Makefile
+!src/CMakeLists.txt
+!src/tests
 !src/*.cpp
 !src/*.hpp
 

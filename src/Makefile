@@ -42,7 +42,7 @@ pack_is:
 
 test:
 	mkdir -p build
-	cd build && cmake .. && cmake --build .
+	cd build && cmake .. && cmake --build . && ./tests-all
 
 doc:
 	doxygen
