@@ -13,14 +13,7 @@
 #include <math.h>
 
 // TO BE ADDED
-// #include "calc-lib.hpp"
-
-// MOCKUP FUNCTIONS
-double add(double a, double b) { return a+b; }
-double divide(double a, double b){return a/b;}
-double multiply(double a, double b){return a*b;}
-double subtract(double a, double b){return a-b;}
-double power(double a, double b){return a*a;}
+#include "calc-lib.hpp"
 
 using namespace std;
 
@@ -37,12 +30,12 @@ double calculate_deviation(vector <double> values)
     double N = (double)values.size();
     deviation = avg = 0; 
     for(auto val: values){
-        deviation = add(deviation, power(val,2));
-        avg = add(avg, val);
+        deviation = add<double>(deviation, power<double>(val,2));
+        avg = add<double>(avg, val);
     }
-    avg = divide(avg, N);
-    // cout << "Avg: " << avg << endl;
-    return sqrt(multiply(divide(1, subtract(N, 1)), subtract(deviation, multiply(N, power(avg, 2)))));
+    avg = divide<double>(avg, N);
+    return root(multiply<double>(divide<double>(1, subtract<double>(N, 1)),
+        subtract<double>(deviation, multiply<double>(N, power<double>(avg, 2)))), 2);
 }
 
 // Only for debugging
