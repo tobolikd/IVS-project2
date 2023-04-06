@@ -34,30 +34,52 @@ typedef struct token
  * 
  */
 enum token_types{
-    INT_T,
-    FLT_T,
     ADD_T,
-    SUB_T,
     MUL_T,
-    DIV_T
+    LBR_T,
+    RBR_T,
+    ID_T,
+    END_T,
+    DIV_T,
+    SUB_T,
+    FAC_T,
+    EXP_T,
+    SQR_T,
+    EXPR_T
 };
 
 template<typename T>
-T add(T x, T y);
+T add(T x, T y) {
+    return x + y;
+}
 
 template<typename T>
-T subtract(T x, T y);
+T subtract(T x, T y) {
+    return x - y;
+}
 
 template<typename T>
-T multiply(T x, T y);
+T multiply(T x, T y) {
+    return x * y;
+}
 
 template<typename T>
-T divide(T x, T y);
+T divide(T x, T y) {
+    if (y == 0)
+        throw std::runtime_error("Division by zero");
+    return x / y;
+}
 
 template<typename T>
-T power(T x, int n);
+T power(T x, int n) {
+    T result = 1;
+    for (int i = 0; i < n; i++) {
+        result *= x;
+    }
+    return result;
+}
 
-double root(double x, double n);
+double root(double num, double n_);
 
 template<typename T>
 double sin(T x);
@@ -73,7 +95,11 @@ int evaluateIntExpression(std::vector<token_t> expression);
 
 float evaluateFloatExpression(std::vector<token_t> expression);
 
-void print_token(token_t token);
+void printToken(token_t token);
+
+void printTokenVector(std::vector<token_t> token_vector);
+
+token_t topTerminal(std::vector<token_t> token_vector);
 
 #endif //IVS_MATH_LIB
 
