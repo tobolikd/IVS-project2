@@ -1,6 +1,10 @@
 # submission dir
 odevzdani
 
+# build dir
+build/*
+!build/.gitkeep
+
 # pdfs
 *.pdf
 
@@ -17,6 +21,7 @@ src/**
 !src/tests
 !src/*.cpp
 !src/*.hpp
+!src/mainwindow.*
 
 # Prerequisites
 *.d
