@@ -46,7 +46,7 @@ test:
 	mkdir -p build
 	cd build && cmake .. && cmake --build . && ./tests-all
 
-profiling: stddev.cpp calc-lib.cpp
+prof: stddev.cpp calc-lib.cpp
 	g++ -pg stddev.cpp calc-lib.cpp -o stddev;
 	mkdir -p $(PROF_DIR)/res
 	seq 10 		| sort -R > $(PROF_DIR)/prof_values10;
