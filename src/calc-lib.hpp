@@ -24,8 +24,7 @@
 */
 typedef struct token
 {
-    int int_value;
-    float float_value;
+    double value;
     int type;
 }token_t;
 
@@ -45,7 +44,8 @@ enum token_types{
     FAC_T,
     EXP_T,
     SQR_T,
-    EXPR_T
+    EXPR_T,
+    HANDLE_T
 };
 
 template<typename T>
@@ -91,9 +91,7 @@ long long int factorial(unsigned int x);
 
 std::vector<token_t> parseExpression(std::string expression);
 
-int evaluateIntExpression(std::vector<token_t> expression);
-
-float evaluateFloatExpression(std::vector<token_t> expression);
+double evaluateExpression(std::vector<token_t> expression);
 
 void printToken(token_t token);
 
