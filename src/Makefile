@@ -47,6 +47,9 @@ test:
 	cd build && cmake .. && cmake --build . && ./tests-all
 
 prof: stddev.cpp calc-lib.cpp
+	g++ $(CFLAGS)  stddev.cpp calc-lib.cpp -o stddev;
+
+prof_generate: prof	
 # COMPILE
 	g++ -pg stddev.cpp calc-lib.cpp -o stddev;
 # Generate input
@@ -66,10 +69,8 @@ prof: stddev.cpp calc-lib.cpp
 	rm -f $(PROF_DIR)/prof_values10*;
 # Generate callgraph (if gprah2dot is installed)
 	-cat $(PROF_DIR)/prof_result1000000.txt | python -m gprof2dot -n0 -e0 | dot -Tpng -o $(PROF_DIR)/callgraph.png 
-#TODO -- part of callgraph (only mathlib functions)
 # Render prokol.pdf
 	-pdflatex protokol.tex
-
 # Clean profiling/*
 prof_clean:
 	rm -rf $(PROF_DIR)/*
