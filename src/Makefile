@@ -47,17 +47,24 @@ test:
 	cd build && cmake .. && cmake --build . && ./tests-all
 
 prof: stddev.cpp calc-lib.cpp
+# COMPILE
 	g++ -pg stddev.cpp calc-lib.cpp -o stddev;
-	mkdir -p $(PROF_DIR)/res
+# Generate input
 	seq 10 		| shuf > $(PROF_DIR)/prof_values10;
 	seq 1000 	| shuf > $(PROF_DIR)/prof_values1000;
 	seq 1000000	| shuf > $(PROF_DIR)/prof_values1000000;
+# Generate gmon files
 	./stddev < $(PROF_DIR)/prof_values10 		> /dev/null	&& mv gmon.out $(PROF_DIR)/gmon10.out;
 	./stddev < $(PROF_DIR)/prof_values1000		> /dev/null && mv gmon.out $(PROF_DIR)/gmon1000.out;
 	./stddev < $(PROF_DIR)/prof_values1000000 	> /dev/null	&& mv gmon.out $(PROF_DIR)/gmon1000000.out;
-	gprof stddev $(PROF_DIR)/gmon10.out			> $(PROF_DIR)/res/prof_result10.txt;
-	gprof stddev $(PROF_DIR)/gmon1000.out		> $(PROF_DIR)/res/prof_result1000.txt;
-	gprof stddev $(PROF_DIR)/gmon1000000.out	> $(PROF_DIR)/res/prof_result1000000.txt;
+# Generate profiling results	
+	gprof stddev $(PROF_DIR)/gmon10.out			> $(PROF_DIR)/prof_result10.txt;
+	gprof stddev $(PROF_DIR)/gmon1000.out		> $(PROF_DIR)/prof_result1000.txt;
+	gprof stddev $(PROF_DIR)/gmon1000000.out	> $(PROF_DIR)/prof_result1000000.txt;
+# Remove input files, gmon files
+	rm $(PROF_DIR)/gmon10*;
+	rm $(PROF_DIR)/prof_values10*;
+
 
 doc:
 	doxygen
