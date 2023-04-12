@@ -53,7 +53,7 @@ prof: stddev.cpp calc-lib.cpp
 	seq 10 		| shuf > $(PROF_DIR)/prof_values10;
 	seq 1000 	| shuf > $(PROF_DIR)/prof_values1000;
 	seq 1000000	| shuf > $(PROF_DIR)/prof_values1000000;
-# Generate gmon files
+# Generate .gmon files
 	./stddev < $(PROF_DIR)/prof_values10 		> /dev/null	&& mv gmon.out $(PROF_DIR)/gmon10.out;
 	./stddev < $(PROF_DIR)/prof_values1000		> /dev/null && mv gmon.out $(PROF_DIR)/gmon1000.out;
 	./stddev < $(PROF_DIR)/prof_values1000000 	> /dev/null	&& mv gmon.out $(PROF_DIR)/gmon1000000.out;
@@ -61,10 +61,18 @@ prof: stddev.cpp calc-lib.cpp
 	gprof stddev $(PROF_DIR)/gmon10.out			> $(PROF_DIR)/prof_result10.txt;
 	gprof stddev $(PROF_DIR)/gmon1000.out		> $(PROF_DIR)/prof_result1000.txt;
 	gprof stddev $(PROF_DIR)/gmon1000000.out	> $(PROF_DIR)/prof_result1000000.txt;
-# Remove input files, gmon files
-	rm $(PROF_DIR)/gmon10*;
-	rm $(PROF_DIR)/prof_values10*;
+# Remove temp files (generated input files, gmon files)
+	rm -f $(PROF_DIR)/gmon10*;
+	rm -f $(PROF_DIR)/prof_values10*;
+# Generate callgraph (if gprah2dot is installed)
+	-cat $(PROF_DIR)/prof_result1000000.txt | python -m gprof2dot -n0 -e0 | dot -Tpng -o $(PROF_DIR)/callgraph.png 
+#TODO -- part of callgraph (only mathlib functions)
+# Render prokol.pdf
+	-pdflatex protokol.tex
 
+# Clean profiling/*
+prof_clean:
+	rm -rf $(PROF_DIR)/*
 
 doc:
 	doxygen
