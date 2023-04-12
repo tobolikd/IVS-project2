@@ -56,3 +56,9 @@ src/**
 *.exe
 *.out
 *.app
+
+# CMake
+_deps/
+CMakeFiles/
+CMakeCache.txt
+*.cmake
