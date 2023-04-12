@@ -49,7 +49,7 @@ test:
 prof: stddev.cpp calc-lib.cpp
 	g++ $(CFLAGS)  stddev.cpp calc-lib.cpp -o stddev;
 
-prof_generate: prof	
+prof_generate:
 # COMPILE
 	g++ -pg stddev.cpp calc-lib.cpp -o stddev;
 # Generate input
