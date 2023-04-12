@@ -13,31 +13,32 @@
 #include <variant>
 #include <vector>
 #include <iostream>
+#include <stack>
 
 #include "calc-lib.hpp"
 
 using namespace std;
 
-template<typename T>
-T add(T x, T y) {
-    return x + y;
+double root(double num, double n_){
+    double x;
+    double A(num);
+    double dx;
+    double eps(10e-6);
+    double n(n_);
+    x = A * 0.5;
+    dx = (A/power(x,n-1)-x)/n;
+    while(dx >= eps || dx <= -eps){
+        x = x + dx;
+        dx = (A/power(x,n-1)-x)/n;
+    }
+   return x;
 }
 
-template<typename T>
-T subtract(T x, T y) {
-    return x - y;
-}
-
-template<typename T>
-T multiply(T x, T y) {
-    return x * y;
-}
-
-template<typename T>
-T divide(T x, T y) {
-    if (y == 0)
-        throw std::runtime_error("Division by zero");
-    return x / y;
+long long int factorial(unsigned int x) {
+    for (unsigned int i=x-1; i>0; i--){
+        x=x*i;
+    }
+    return x;
 }
 
 /**
@@ -45,32 +46,33 @@ T divide(T x, T y) {
  * 
  * @param token token to be printed
  */
-void print_token(token_t token){
-    if (token.type == INT_T){
-        cout<<"type: int, value: "<<token.int_value<<endl;
+void printToken(token_t token){
+    const char *type[] = {"+", "*", "(", ")", "id", ";", "/", "-", "!", "^", "√", "E"};
+
+    if (token.type == ID_T){
+        cout<<token.int_value<<", ";
     }
-    else if (token.type == ADD_T)
-    {
-        cout<<"type: +"<<endl;
+    else {
+        cout<<type[token.type]<<", ";
     }
-    else if (token.type == SUB_T)
-    {
-        cout<<"type: -"<<endl;
-    }
-    else if (token.type == MUL_T)
-    {
-        cout<<"type: *"<<endl;
-    }
-    else if (token.type == DIV_T)
-    {
-        cout<<"type: /"<<endl;
-    }
-    else{
-        cout<<"unknown token!"<<endl;
-    }
-    
 }
 
+void printTokenVector(std::vector<token_t> token_vector){
+    for (int i=0; i<token_vector.size(); i++){
+        printToken(token_vector[i]);
+    }
+    cout<<endl;
+}
+
+token_t topTerminal(std::vector<token_t> token_vector){
+    for (int i=0; i<token_vector.size(); i++){
+        if(token_vector[i].type!=EXPR_T){
+            return token_vector[i];
+        }
+    }
+    fprintf(stderr, "No terminal found");
+    exit(EXIT_FAILURE);
+}
 /**
  * @brief Parses an expression from string form into a vector of tokens.
  * 
@@ -93,7 +95,7 @@ std::vector<token_t> parseExpression(std::string expression) {
         } else {
             if (token != "") {
                 current.int_value = stoi(token);
-                current.type = INT_T;
+                current.type = ID_T;
                 tokens_vector.push_back(current);
                 token = "";
             }
@@ -115,7 +117,7 @@ std::vector<token_t> parseExpression(std::string expression) {
         }
     }
     if (token != "") {
-        current.type = INT_T;
+        current.type = ID_T;
         current.int_value = stoi(token);
         tokens_vector.push_back(current);
     }
@@ -130,6 +132,62 @@ std::vector<token_t> parseExpression(std::string expression) {
  * @return int result
  */
 int evaluateIntExpression(std::vector<token_t> expression){
+    //precedence table
+    const char p_table[11][11] = {
+    //+    *    (    )    i    $    /    -    !    ^    √  
+    {'>', '<', '<', '>', '<', '>', '<', '>', '<', '<', '<'}, // +
+    {'>', '>', '<', '>', '<', '>', '>', '>', '<', '<', '<'}, // *
+    {'<', '<', '<', '=', '<', 'x', '<', '<', '<', '<', '<'}, // (
+    {'>', '>', 'x', '>', 'x', '>', '>', '>', '>', '>', '>'}, // )
+    {'>', '>', 'x', '>', 'x', '>', '>', '>', '>', '>', '>'}, // i
+    {'<', '<', '<', 'x', '<', 'x', '<', '<', '<', '<', '<'}, // $
+    {'>', '>', '<', '>', '<', '>', '>', '>', '>', '>', '<'}, // /
+    {'>', '<', '<', '>', '<', '>', '<', '>', '<', '<', '<'}, // -
+    {'>', '<', '<', '>', '<', '>', '<', '>', 'x', '>', '>'}, // !
+    {'<', '<', '<', '>', '<', '>', '<', '<', '<', '>', '<'}, // ^
+    {'<', '<', '<', '>', '<', '>', '<', '<', '<', '>', '<'}, // √
+    };
+
+
+    vector<token_t> token_stack;
+    token_t bottom_element;
+    bottom_element.type = END_T;
+    token_stack.insert(token_stack.begin(), bottom_element);
+
+    while(expression.size()>0){
+        token_t input = expression.front();
+        expression.erase(expression.begin());
+
+        cout<<"***stack: ***"<<endl;
+        printTokenVector(token_stack);
+        cout<<"***input token: ***"<<endl;
+        printToken(input);
+        cout<<endl;
+        cout<<"***remaining expression: ***"<<endl;
+        printTokenVector(expression);
+
+        switch (p_table[topTerminal(token_stack).type][input.type]){
+            case '<':
+                cout<<"<"<<endl;
+                token_stack.insert(token_stack.begin(), input);
+                break;
+            case '>':
+                cout<<">"<<endl;
+                return 0;
+                break;
+            case '=':
+                cout<<"="<<endl;
+                return 0;
+                //TODO
+                break;
+            case 'x':
+                cout<<"x"<<endl;
+                return 0;
+                //TODO
+                break;
+        }
+    }
+
     return 0;
 }
 
