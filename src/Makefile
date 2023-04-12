@@ -49,16 +49,15 @@ test:
 prof: stddev.cpp calc-lib.cpp
 	g++ -pg stddev.cpp calc-lib.cpp -o stddev;
 	mkdir -p $(PROF_DIR)/res
-	seq 10 		| sort -R > $(PROF_DIR)/prof_values10;
-	seq 1000 	| sort -R > $(PROF_DIR)/prof_values1000;
-	seq 1000000	| sort -R > $(PROF_DIR)/prof_values1000000;
+	seq 10 		| shuf > $(PROF_DIR)/prof_values10;
+	seq 1000 	| shuf > $(PROF_DIR)/prof_values1000;
+	seq 1000000	| shuf > $(PROF_DIR)/prof_values1000000;
 	./stddev < $(PROF_DIR)/prof_values10 		> /dev/null	&& mv gmon.out $(PROF_DIR)/gmon10.out;
 	./stddev < $(PROF_DIR)/prof_values1000		> /dev/null && mv gmon.out $(PROF_DIR)/gmon1000.out;
 	./stddev < $(PROF_DIR)/prof_values1000000 	> /dev/null	&& mv gmon.out $(PROF_DIR)/gmon1000000.out;
 	gprof stddev $(PROF_DIR)/gmon10.out			> $(PROF_DIR)/res/prof_result10.txt;
 	gprof stddev $(PROF_DIR)/gmon1000.out		> $(PROF_DIR)/res/prof_result1000.txt;
 	gprof stddev $(PROF_DIR)/gmon1000000.out	> $(PROF_DIR)/res/prof_result1000000.txt;
-	rm stddev;
 
 doc:
 	doxygen
