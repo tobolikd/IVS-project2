@@ -23,8 +23,8 @@ calc::calc(QWidget *parent)
     // If result is being shown
     result = false;
 
-    // For displaying ")" after "sqrt("
-    sqrt = false;
+    // Auto close brackets after "equals" button
+    unclosedBrackets = 0;
 
     // Number buttons
     QPushButton * but_num_1 = ui->Button_num1;
@@ -36,6 +36,7 @@ calc::calc(QWidget *parent)
     QPushButton * but_num_7 = ui->Button_num7;
     QPushButton * but_num_8 = ui->Button_num8;
     QPushButton * but_num_9 = ui->Button_num9;
+    QPushButton * comma_button = ui->Button_comma;
 
     // Function buttons
     QPushButton * clr_button    = ui->Button_clr;
@@ -76,6 +77,7 @@ calc::calc(QWidget *parent)
     connect(but_num_7, SIGNAL(clicked(bool)), signalMapper, SLOT(map()));
     connect(but_num_8, SIGNAL(clicked(bool)), signalMapper, SLOT(map()));
     connect(but_num_9, SIGNAL(clicked(bool)), signalMapper, SLOT(map()));
+    connect(comma_button, SIGNAL(clicked(bool)), signalMapper, SLOT(map()));
 
     // Function buttons
     connect(comb_button,    SIGNAL(clicked(bool)), signalMapper, SLOT(map()));
@@ -99,6 +101,7 @@ calc::calc(QWidget *parent)
     signalMapper -> setMapping(but_num_7, "7");
     signalMapper -> setMapping(but_num_8, "8");
     signalMapper -> setMapping(but_num_9, "9");
+    signalMapper -> setMapping(comma_button, ",");
 
     // Symbols mapping
     signalMapper -> setMapping(comb_button,   "C");
@@ -113,6 +116,7 @@ calc::calc(QWidget *parent)
     signalMapper -> setMapping(sqrt_button,   "sqrt(");
 
     connect(signalMapper, SIGNAL(mappedString(QString)), this, SLOT(updateUserInput(QString)));
+
 }
 
 calc::~calc()
@@ -120,10 +124,25 @@ calc::~calc()
     delete ui;
 }
 
+bool endsWith(std::string_view str, std::string_view substr)
+{
+    return str.size() >= substr.size() && 0 == str.compare(str.size()-substr.size(), substr.size(), substr);
+}
+
 // Evaluates expression (stored in mathlibInputStr)
-void calc::evalInput(){
+void calc::evalInput()
+{
     // TODO -- connect with mathlib
-    //      -- catch possible errors
+    //      -- catch possible exceptions (from mathlib)
+    //      -- convert userInputStr to mathlibInputStr
+
+    this->updateUnclosedBrackets();
+
+    //Add close unclosed brackets
+    if(this->unclosedBrackets){
+        for(unsigned int i = 0; i < this->unclosedBrackets; i++)
+            this->userInputStr += ")";
+    }
 
     this->clearUserInput();
     std::string evaluated = "RESULT";
@@ -132,15 +151,43 @@ void calc::evalInput(){
     this->result = true;
 }
 
-void calc::clearInputStrings(){
+void calc::clearInputStrings()
+{
     this->userInputStr = "";
     this->mathlibInputStr = "";
+    this->unclosedBrackets = 0;
 }
 
-void calc::deleteChar(){
+
+
+// Updates value of unclosed brackets in the whole expression
+void calc::updateUnclosedBrackets()
+{
+    this->unclosedBrackets = 0;
+    for(auto &chr : this->userInputStr){
+        if(chr == '('){
+            this->unclosedBrackets++;
+        }
+        else if(chr == ')' && this->unclosedBrackets){
+            this->unclosedBrackets--;
+        }
+    }
+}
+
+void calc::deleteChar()
+{
+    if(this->result){
+        this->clearUserInput();
+        return;
+    }
+
     std::string newStr = this->userInputStr;
     if(this->userInputStr.size()){
-        newStr.resize(this->userInputStr.size() - 1);
+        if(endsWith(this->userInputStr,"sqrt(")){
+            newStr.resize(this->userInputStr.size() - strlen("sqrt("));
+        } else {
+            newStr.resize(this->userInputStr.size() - 1);
+        }
     }
     this->clearInputStrings();
 
@@ -149,15 +196,18 @@ void calc::deleteChar(){
 }
 
 // Clears user input strings
-void calc::clearUserInput(){
+void calc::clearUserInput()
+{
     this->clearInputStrings();
     QString qstr = QString::fromStdString(userInputStr);
     this->updateUserInput(qstr);
 }
 
 // Updates text on userInputLabel
-void calc::updateUserInput(QString qstr){
+void calc::updateUserInput(QString qstr)
+{
     std::string str = qstr.toStdString();
+
 
     // If result is being shown, delete it first
     if(this->result){
@@ -165,22 +215,14 @@ void calc::updateUserInput(QString qstr){
         this->result = false;
     }
 
-    // SQRT
-    if(this->sqrt && !isdigit(str[0]) && str != ")"){
-        this->userInputStr += ")";
-        this->sqrt = false;
-    }
-    if(str == "sqrt("){
-        this->sqrt = true;
-    }
-
-
-
     this->userInputStr += str;
+    this->updateUnclosedBrackets();
 
     QLabel * userInputLabel = this->ui->userInput;
     qstr = QString::fromStdString(this->userInputStr);
     userInputLabel->setText(qstr);
-
 }
+
+
+
 
