@@ -21,7 +21,8 @@ src/**
 !src/tests
 !src/*.cpp
 !src/*.hpp
-!src/mainwindow.*
+!src/calc.*
+!src/Calculator.pro
 
 # Prerequisites
 *.d
