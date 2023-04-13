@@ -1,12 +1,12 @@
-#include "mainwindow.h"
+#include "calc.h"
 
 #include <QApplication>
+#include <QPushButton>
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    MainWindow w;
-    w.resize(800, 655);
+    calc w;
     w.show();
     return a.exec();
 }

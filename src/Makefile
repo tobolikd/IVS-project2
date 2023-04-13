@@ -1,8 +1,10 @@
 PROJ = calc
 PROFILE = prof
+GUI = gui
 ZIP = xtobol06_xtesar43_xsteti05_xhalen00.zip
 CC = gcc
 CFLAGS = -Wall -std=c++20 -MMD
+QMFLAGS = -spec linux-g++ CONFIG+=qtquickcompiler
 LDLIBS = -lstdc++
 
 PROJ_SRCS = $(wildcard $(PROJ)*.cpp)
@@ -16,9 +18,16 @@ DEPS = $(SRCS:.cpp=.d)
 EXECS = $(PROJ) $(PROFILE)
 OBJS = $(PROJ_OBJS) $(PROFILE_OBJS)
 
-.PHONY: clean all
+QMAKE_PATH = ${HOME}/Qt/6.5.0/gcc_64/bin/qmake
 
-all: $(PROJ) $(PROFILE)
+.PHONY: clean all gui
+
+gui:
+	cd ../build && \
+	$(QMAKE_PATH) ../src/Calculator.pro $(QMFLAGS) && \
+	make
+
+all: $(PROJ) $(PROFILE) $(GUI)
 
 $(PROJ): $(OBJS)
 $(PROFILE): $(PROFILE_OBJS)
