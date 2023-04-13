@@ -3,6 +3,7 @@
 #include <map>
 #include <string>
 #include <QSignalMapper>
+#include <QKeyEvent>
 
 calc::calc(QWidget *parent)
     : QMainWindow(parent)

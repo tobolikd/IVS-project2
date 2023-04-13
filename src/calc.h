@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QSignalMapper>
+#include <QKeyEvent>
 #include <string>
 #include <map>
 #include "ui_calc.h"
@@ -31,6 +32,52 @@ private:
     std::string userInputStr;
     std::string mathlibInputStr;
     bool result;
-    bool sqrt;
-};
+    unsigned int unclosedBrackets;
+    void updateUnclosedBrackets();
+
+    void keyPressEvent(QKeyEvent *event) override
+    {
+        switch(event->key()){
+            case Qt::Key_Delete:
+                this->clearInputStrings();
+                return;
+            case Qt::Key_Backspace:
+                this->deleteChar();
+                return;
+            case Qt::Key_Equal:
+            case Qt::Key_Enter:
+            case Qt::Key_Return:
+                this->evalInput();
+                return;
+        }
+
+        std::map<int, std::string> keyToSymbol = {
+            {Qt::Key_0, "0"},
+            {Qt::Key_1, "1"},
+            {Qt::Key_2, "2"},
+            {Qt::Key_3, "3"},
+            {Qt::Key_4, "4"},
+            {Qt::Key_5, "5"},
+            {Qt::Key_6, "6"},
+            {Qt::Key_7, "7"},
+            {Qt::Key_8, "8"},
+            {Qt::Key_9, "9"},
+
+            {Qt::Key_ParenLeft,   "("},
+            {Qt::Key_ParenRight,  ")"},
+            {Qt::Key_Exclam,      "!"},
+            {Qt::Key_AsciiCircum, "^"},
+            {Qt::Key_Plus,        "+"},
+            {Qt::Key_Minus,       "-"},
+            {Qt::Key_Asterisk,    "*"},
+            {Qt::Key_Slash,       "/"},
+            {Qt::Key_C,           "C"}
+        };
+
+        if(keyToSymbol.find(event->key()) == keyToSymbol.end()){
+            return;
+        }
+        this->updateUserInput(QString::fromStdString(keyToSymbol[event->key()]));
+
+    }};
 #endif // CALC_H
