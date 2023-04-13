@@ -18,7 +18,7 @@ DEPS = $(SRCS:.cpp=.d)
 EXECS = $(PROJ) $(PROFILE)
 OBJS = $(PROJ_OBJS) $(PROFILE_OBJS)
 
-QMAKE_PATH = ${HOME}/Qt/6.5.0/gcc_64/bin/qmake
+QMAKE_PATH = /usr/lib/qt6/bin/qmake
 
 .PHONY: clean all gui
 
