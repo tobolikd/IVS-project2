@@ -2,8 +2,10 @@
 #include "ui_calc.h"
 #include <map>
 #include <string>
+#include <regex>
 #include <QSignalMapper>
 #include <QKeyEvent>
+#include <QDebug>
 
 calc::calc(QWidget *parent)
     : QMainWindow(parent)
@@ -114,7 +116,7 @@ calc::calc(QWidget *parent)
     signalMapper -> setMapping(mult_button,   "*");
     signalMapper -> setMapping(div_button,    "/");
     signalMapper -> setMapping(power_button,  "^");
-    signalMapper -> setMapping(sqrt_button,   "sqrt(");
+    signalMapper -> setMapping(sqrt_button,   "√");
 
     connect(signalMapper, SIGNAL(mappedString(QString)), this, SLOT(updateUserInput(QString)));
 
@@ -130,6 +132,12 @@ bool endsWith(std::string_view str, std::string_view substr)
     return str.size() >= substr.size() && 0 == str.compare(str.size()-substr.size(), substr.size(), substr);
 }
 
+// Convert user input string for mathlib library
+void calc::convertExpression()
+{
+    this->mathlibInputStr = std::regex_replace(this->userInputStr, std::regex("√"), "_");
+}
+
 // Evaluates expression (stored in mathlibInputStr)
 void calc::evalInput()
 {
@@ -137,13 +145,11 @@ void calc::evalInput()
     //      -- catch possible exceptions (from mathlib)
     //      -- convert userInputStr to mathlibInputStr
 
-    this->updateUnclosedBrackets();
+    this->addUnclocedBrackets();
+    this->convertExpression();
 
-    //Add close unclosed brackets
-    if(this->unclosedBrackets){
-        for(unsigned int i = 0; i < this->unclosedBrackets; i++)
-            this->userInputStr += ")";
-    }
+    qDebug() << "Expression: " << this->userInputStr << "\n";
+    qDebug() << "Mathlib epxression: " << this->mathlibInputStr << "\n";
 
     this->clearUserInput();
     std::string evaluated = "RESULT";
@@ -159,6 +165,17 @@ void calc::clearInputStrings()
     this->unclosedBrackets = 0;
 }
 
+
+// Add unclosed brackets to the end of the expression
+void calc::addUnclocedBrackets()
+{
+    this->updateUnclosedBrackets();
+    //Add close unclosed brackets
+    if(this->unclosedBrackets){
+        for(unsigned int i = 0; i < this->unclosedBrackets; i++)
+            this->userInputStr += ")";
+    }
+}
 
 
 // Updates value of unclosed brackets in the whole expression
@@ -184,8 +201,8 @@ void calc::deleteChar()
 
     std::string newStr = this->userInputStr;
     if(this->userInputStr.size()){
-        if(endsWith(this->userInputStr,"sqrt(")){
-            newStr.resize(this->userInputStr.size() - strlen("sqrt("));
+        if(endsWith(this->userInputStr,"√")){
+            newStr.resize(this->userInputStr.size() - strlen("√"));
         } else {
             newStr.resize(this->userInputStr.size() - 1);
         }
@@ -216,8 +233,13 @@ void calc::updateUserInput(QString qstr)
         this->result = false;
     }
 
+    // Insert default 2 before √ (if other number not specified)
+    if(str == "√" && !isdigit(this->userInputStr[this->userInputStr.length() - 1])){
+        qDebug() << this->userInputStr[this->userInputStr.length() - strlen("√") - 1] << "\n";
+        this->userInputStr += "2";
+    }
+
     this->userInputStr += str;
-    this->updateUnclosedBrackets();
 
     QLabel * userInputLabel = this->ui->userInput;
     qstr = QString::fromStdString(this->userInputStr);

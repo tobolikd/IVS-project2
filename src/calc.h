@@ -34,6 +34,9 @@ private:
     bool result;
     unsigned int unclosedBrackets;
     void updateUnclosedBrackets();
+    void addUnclocedBrackets();
+    void convertExpression();
+
 
     void keyPressEvent(QKeyEvent *event) override
     {
