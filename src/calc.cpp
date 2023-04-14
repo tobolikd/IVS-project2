@@ -5,7 +5,6 @@
 #include <regex>
 #include <QSignalMapper>
 #include <QKeyEvent>
-#include <QDebug>
 
 calc::calc(QWidget *parent)
     : QMainWindow(parent)
@@ -148,9 +147,6 @@ void calc::evalInput()
     this->addUnclocedBrackets();
     this->convertExpression();
 
-    qDebug() << "Expression: " << this->userInputStr << "\n";
-    qDebug() << "Mathlib epxression: " << this->mathlibInputStr << "\n";
-
     this->clearUserInput();
     std::string evaluated = "RESULT";
     QString qevaluated = QString::fromStdString(evaluated);
@@ -235,7 +231,6 @@ void calc::updateUserInput(QString qstr)
 
     // Insert default 2 before √ (if other number not specified)
     if(str == "√" && !isdigit(this->userInputStr[this->userInputStr.length() - 1])){
-        qDebug() << this->userInputStr[this->userInputStr.length() - strlen("√") - 1] << "\n";
         this->userInputStr += "2";
     }
 
