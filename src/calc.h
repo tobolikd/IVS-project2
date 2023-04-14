@@ -26,11 +26,13 @@ private slots:
     void evalInput();
     void clearInputStrings();
     void deleteChar();
+    void retrieveAnswer();
 
 private:
     Ui::calc *ui;
     std::string userInputStr;
     std::string mathlibInputStr;
+    std::string prevAnswer;
     bool result;
     unsigned int unclosedBrackets;
     void updateUnclosedBrackets();

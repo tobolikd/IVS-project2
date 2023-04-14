@@ -22,7 +22,10 @@ calc::calc(QWidget *parent)
     // Input string for mathlib parser
     mathlibInputStr = "";
 
-    // If result is being shown
+    // Previous answer (retrievable with ANS button)
+    prevAnswer = "";
+
+    // Indicates if result is being shown
     result = false;
 
     // Auto close brackets after "equals" button
@@ -44,6 +47,7 @@ calc::calc(QWidget *parent)
     QPushButton * clr_button    = ui->Button_clr;
     QPushButton * del_button    = ui->Button_del;
     QPushButton * equal_button  = ui->Button_equal;
+    QPushButton * answ_button   = ui->Button_answer;
 
     QPushButton * comb_button   = ui->Button_comb;
     QPushButton * fact_button   = ui->Button_fact;
@@ -52,7 +56,7 @@ calc::calc(QWidget *parent)
     QPushButton * plus_button   = ui->Button_plus;
     QPushButton * minus_button  = ui->Button_minus;
     QPushButton * power_button  = ui->Button_power;
-    QPushButton * sqrt_button   = ui->pushButton;
+    QPushButton * sqrt_button   = ui->Button_sqrt;
     QPushButton * div_button    = ui->Button_divide;
     QPushButton * mult_button   = ui->Button_multiply;
 
@@ -60,14 +64,11 @@ calc::calc(QWidget *parent)
     // Button mapping
     QSignalMapper * signalMapper = new QSignalMapper(this);
 
-    // Clear button
-    connect(clr_button, SIGNAL(pressed()), this, SLOT(clearUserInput()));
-
-    // Delete button
-    connect(del_button, SIGNAL(pressed()), this, SLOT(deleteChar()));
-
-    // Equal button
-    connect(equal_button, SIGNAL(pressed()), this, SLOT(evalInput()));
+    // clear, delete, equal, answ buttons:
+    connect(clr_button,     SIGNAL(pressed()), this, SLOT(clearUserInput()));
+    connect(del_button,     SIGNAL(pressed()), this, SLOT(deleteChar()));
+    connect(equal_button,   SIGNAL(pressed()), this, SLOT(evalInput()));
+    connect(answ_button,    SIGNAL(pressed()), this, SLOT(retrieveAnswer()));
 
     // Number buttons
     connect(but_num_1, SIGNAL(clicked(bool)), signalMapper, SLOT(map()));
@@ -147,11 +148,20 @@ void calc::evalInput()
     this->addUnclocedBrackets();
     this->convertExpression();
 
+    // TODO: evaluate expression
+
+
     this->clearUserInput();
-    std::string evaluated = "RESULT";
-    QString qevaluated = QString::fromStdString(evaluated);
-    this->updateUserInput(qevaluated);
+    std::string resultStr = "RESULT";
+    QString qResultStr= QString::fromStdString(resultStr);
+    this->prevAnswer = resultStr;
+    this->updateUserInput(qResultStr);
     this->result = true;
+}
+
+void calc::retrieveAnswer()
+{
+    this->updateUserInput(QString::fromStdString(this->prevAnswer));
 }
 
 void calc::clearInputStrings()
