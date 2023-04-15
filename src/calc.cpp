@@ -41,7 +41,7 @@ calc::calc(QWidget *parent)
     QPushButton * but_num_7 = ui->Button_num7;
     QPushButton * but_num_8 = ui->Button_num8;
     QPushButton * but_num_9 = ui->Button_num9;
-    QPushButton * comma_button = ui->Button_comma;
+    QPushButton * point_button = ui->Button_point;
 
     // Function buttons
     QPushButton * clr_button    = ui->Button_clr;
@@ -80,7 +80,7 @@ calc::calc(QWidget *parent)
     connect(but_num_7, SIGNAL(clicked(bool)), signalMapper, SLOT(map()));
     connect(but_num_8, SIGNAL(clicked(bool)), signalMapper, SLOT(map()));
     connect(but_num_9, SIGNAL(clicked(bool)), signalMapper, SLOT(map()));
-    connect(comma_button, SIGNAL(clicked(bool)), signalMapper, SLOT(map()));
+    connect(point_button, SIGNAL(clicked(bool)), signalMapper, SLOT(map()));
 
     // Function buttons
     connect(comb_button,    SIGNAL(clicked(bool)), signalMapper, SLOT(map()));
@@ -104,7 +104,7 @@ calc::calc(QWidget *parent)
     signalMapper -> setMapping(but_num_7, "7");
     signalMapper -> setMapping(but_num_8, "8");
     signalMapper -> setMapping(but_num_9, "9");
-    signalMapper -> setMapping(comma_button, ",");
+    signalMapper -> setMapping(point_button, ".");
 
     // Symbols mapping
     signalMapper -> setMapping(comb_button,   "C");
