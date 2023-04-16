@@ -1,10 +1,12 @@
-#include "calc.h"
-#include "ui_calc.h"
 #include <map>
 #include <string>
 #include <regex>
 #include <QSignalMapper>
 #include <QKeyEvent>
+
+#include "calc.h"
+#include "ui_calc.h"
+#include "calc-lib.hpp"
 
 calc::calc(QWidget *parent)
     : QMainWindow(parent)
@@ -132,6 +134,10 @@ bool endsWith(std::string_view str, std::string_view substr)
     return str.size() >= substr.size() && 0 == str.compare(str.size()-substr.size(), substr.size(), substr);
 }
 
+bool isWhole(double input){
+    return input == (double)(int)input;
+}
+
 // Convert user input string for mathlib library
 void calc::convertExpression()
 {
@@ -148,11 +154,16 @@ void calc::evalInput()
     this->addUnclocedBrackets();
     this->convertExpression();
 
-    // TODO: evaluate expression
-
-
+    double resultDouble = evaluateExpression(parseExpression(this->mathlibInputStr));
     this->clearUserInput();
-    std::string resultStr = "RESULT";
+
+    std::string resultStr = std::to_string(resultDouble);
+
+    // If result is a whole number display only the whole part
+    if(isWhole(resultDouble)){
+        resultStr = std::to_string((int)resultDouble);
+    }
+
     QString qResultStr= QString::fromStdString(resultStr);
     this->prevAnswer = resultStr;
     this->updateUserInput(qResultStr);
@@ -163,6 +174,7 @@ void calc::retrieveAnswer()
 {
     this->updateUserInput(QString::fromStdString(this->prevAnswer));
 }
+
 
 void calc::clearInputStrings()
 {
