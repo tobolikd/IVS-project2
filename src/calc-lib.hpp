@@ -71,7 +71,7 @@ T divide(T x, T y) {
 }
 
 template<typename T>
-T power(T x, unsigned int n) {
+T power(T x, int n) {
     T result = 1;
     for (int i = 0; i < n; i++) {
         result *= x;
