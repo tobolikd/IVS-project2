@@ -18,14 +18,18 @@ DEPS = $(SRCS:.cpp=.d)
 EXECS = $(PROJ) $(PROFILE)
 OBJS = $(PROJ_OBJS) $(PROFILE_OBJS)
 
-QMAKE_PATH = /usr/lib/qt6/bin/qmake
+QMAKE_PATH = qmake
 
 .PHONY: clean all gui
 
 gui:
-	cd ../build && \
-	$(QMAKE_PATH) ../src/Calculator.pro $(QMFLAGS) && \
+	mkdir -p build
+	cd build && \
+	$(QMAKE_PATH) ../Calculator.pro $(QMFLAGS) && \
 	make
+
+run-gui: gui
+	./build/Calculator
 
 all: $(PROJ) $(PROFILE) $(GUI)
 
@@ -50,8 +54,8 @@ pack_is:
 	cd .. && zip -r $(ZIP) hodnoceni.txt src dokumentace.pdf odevzdani.txt
 
 test:
-	mkdir -p build
-	cd build && cmake .. && cmake --build . && ./tests-all
+	mkdir -p build-tests
+	cd build-tests && cmake .. && cmake --build . && ./tests-all
 
 doc:
 	doxygen
@@ -63,7 +67,7 @@ user_doc:
 
 clean: clean_user_doc
 	rm -f $(EXECS) $(OBJS) $(DEPS)
-	rm -rf build html latex ../odevzdani ../*.zip
+	rm -rf build-test build html latex ../odevzdani ../*.zip
 
 clean_user_doc:
 	cd ../doc && make purge
