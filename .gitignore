@@ -2,6 +2,7 @@
 odevzdani
 
 # build dir
+!build/.gitkeep
 build/**
 
 # IDE-specific
@@ -23,6 +24,8 @@ src/**
 !src/tests
 !src/*.cpp
 !src/*.hpp
+!src/calc.*
+!src/Calculator.pro
 
 # Prerequisites
 *.d
