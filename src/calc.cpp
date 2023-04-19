@@ -1,3 +1,14 @@
+/**
+ * @file calc.cpp
+ * @author Jakub Štětina
+ * @brief The Calculator class
+ * @version 0.1
+ * @date 2023-04-19
+ * 
+ * @copyright Copyright (c) 2023
+ * 
+ */
+
 #include <map>
 #include <string>
 #include <regex>
@@ -8,6 +19,12 @@
 #include "ui_calc.h"
 #include "calc-lib.hpp"
 
+
+/**
+ * @brief Calc class constructor
+ * 
+ * @param parent parent widget
+ */
 calc::calc(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::calc)
@@ -124,27 +141,54 @@ calc::calc(QWidget *parent)
 
 }
 
+/**
+ * @brief Calc class destructor
+ * 
+ */
 calc::~calc()
 {
     delete ui;
 }
 
+/**
+ * @brief Checks if string ends with specified substring
+ * 
+ * @param str String
+ * @param substr Substring
+ * @return true String ends with substring
+ * @return false String does NOT end with substring
+ */
 bool endsWith(std::string_view str, std::string_view substr)
 {
     return str.size() >= substr.size() && 0 == str.compare(str.size()-substr.size(), substr.size(), substr);
 }
 
+/**
+ * @brief Checks if number (double) is a whole number
+ * 
+ * @param input input number (double)
+ * @return true number has non-zero fractional part
+ * @return false number is whole
+ */
 bool isWhole(double input){
     return input == (double)(int)input;
 }
 
-// Convert user input string for mathlib library
+/**
+ * @brief Converts inputString to mathlib-compatible expression
+ * 
+ */
 void calc::convertExpression()
 {
     this->mathlibInputStr = std::regex_replace(this->userInputStr, std::regex("√"), "_");
 }
 
-// Evaluates expression (stored in mathlibInputStr)
+/**
+ * @brief Evalueates user input, 
+ * prints result on the screen,
+ * uses mathlib functions
+ * 
+ */
 void calc::evalInput()
 {
     // TODO -- connect with mathlib
@@ -170,12 +214,21 @@ void calc::evalInput()
     this->result = true;
 }
 
+/**
+ * @brief Prints previous result on screen, 
+ * connected with the 'ANS' button
+ * 
+ */
 void calc::retrieveAnswer()
 {
     this->updateUserInput(QString::fromStdString(this->prevAnswer));
 }
 
 
+/**
+ * @brief Clears input strings
+ * 
+ */
 void calc::clearInputStrings()
 {
     this->userInputStr = "";
@@ -183,8 +236,10 @@ void calc::clearInputStrings()
     this->unclosedBrackets = 0;
 }
 
-
-// Add unclosed brackets to the end of the expression
+/**
+ * @brief Adds unclosed brackets to the end of the expression
+ * 
+ */
 void calc::addUnclocedBrackets()
 {
     this->updateUnclosedBrackets();
@@ -196,7 +251,10 @@ void calc::addUnclocedBrackets()
 }
 
 
-// Updates value of unclosed brackets in the whole expression
+/**
+ * @brief Counts the value of unclosed bracket in the usrInputStr
+ * 
+ */
 void calc::updateUnclosedBrackets()
 {
     this->unclosedBrackets = 0;
@@ -210,6 +268,12 @@ void calc::updateUnclosedBrackets()
     }
 }
 
+
+/**
+ * @brief Deletes one character from user input, 
+ * connected with the 'DEL' button
+ * 
+ */
 void calc::deleteChar()
 {
     if(this->result){
@@ -218,6 +282,8 @@ void calc::deleteChar()
     }
 
     std::string newStr = this->userInputStr;
+
+    // Special case for sqrt symbol (takes up multiple bytes)
     if(this->userInputStr.size()){
         if(endsWith(this->userInputStr,"√")){
             newStr.resize(this->userInputStr.size() - strlen("√"));
@@ -225,13 +291,17 @@ void calc::deleteChar()
             newStr.resize(this->userInputStr.size() - 1);
         }
     }
-    this->clearInputStrings();
 
+    this->clearInputStrings();
     QString qstr = QString::fromStdString(newStr);
     this->updateUserInput(qstr);
 }
 
-// Clears user input strings
+/**
+ * @brief Clears user input from the screen, 
+ * connected with the 'CLR' button
+ * 
+ */
 void calc::clearUserInput()
 {
     this->clearInputStrings();
@@ -239,11 +309,14 @@ void calc::clearUserInput()
     this->updateUserInput(qstr);
 }
 
-// Updates text on userInputLabel
+/**
+ * @brief Updates and prints user input
+ * 
+ * @param qstr New symbol to be added
+ */
 void calc::updateUserInput(QString qstr)
 {
     std::string str = qstr.toStdString();
-
 
     // If result is being shown, delete it first
     if(this->result){
@@ -251,13 +324,15 @@ void calc::updateUserInput(QString qstr)
         this->result = false;
     }
 
-    // Insert default 2 before √ (if other number not specified)
+    // Insert default 2 before √ (if no other number specified)
     if(str == "√" && !isdigit(this->userInputStr[this->userInputStr.length() - 1])){
         this->userInputStr += "2";
     }
 
+    // Update expression
     this->userInputStr += str;
 
+    // Convert to QString
     QLabel * userInputLabel = this->ui->userInput;
     qstr = QString::fromStdString(this->userInputStr);
     userInputLabel->setText(qstr);

@@ -1,3 +1,14 @@
+/**
+ * @file calc.h
+ * @author Jakub Štětina
+ * @brief Header file for the calc class
+ * @version 0.1
+ * @date 2023-04-19
+ * 
+ * @copyright Copyright (c) 2023
+ * 
+ */
+
 #ifndef CALC_H
 #define CALC_H
 
@@ -40,8 +51,14 @@ private:
     void convertExpression();
 
 
+    /**
+     * @brief Defines press events for keyboard input
+     * 
+     * @param event Key event
+     */
     void keyPressEvent(QKeyEvent *event) override
     {
+        // Defines control buttons with non-functional roles
         switch(event->key()){
             case Qt::Key_Delete:
                 this->clearInputStrings();
@@ -55,7 +72,8 @@ private:
                 this->evalInput();
                 return;
         }
-
+        
+        // Maps symbol buttons
         std::map<int, std::string> keyToSymbol = {
             {Qt::Key_0, "0"},
             {Qt::Key_1, "1"},
@@ -79,9 +97,12 @@ private:
             {Qt::Key_C,           "C"}
         };
 
+        // If key is not found
         if(keyToSymbol.find(event->key()) == keyToSymbol.end()){
             return;
         }
+
+        // Print user input on screen
         this->updateUserInput(QString::fromStdString(keyToSymbol[event->key()]));
 
     }};
