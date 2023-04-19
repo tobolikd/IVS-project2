@@ -2,8 +2,11 @@
 odevzdani
 
 # build dir
-build/*
 !build/.gitkeep
+build/**
+
+# IDE-specific
+.vscode/
 
 # pdfs
 *.pdf
