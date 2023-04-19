@@ -20,6 +20,9 @@ OBJS = $(PROJ_OBJS) $(PROFILE_OBJS)
 
 QMAKE_PATH = qmake
 
+PACKAGE_NAME = calculator-1.0
+
+
 .PHONY: clean all gui
 
 gui:
@@ -27,6 +30,17 @@ gui:
 	cd build && \
 	$(QMAKE_PATH) ../Calculator.pro $(QMFLAGS) && \
 	make
+
+installer:
+	mkdir -p installer/$(PACKAGE_NAME)
+	cp *.cpp *.hpp *.h *.ui *.pro installer/$(PACKAGE_NAME)/ && \
+	cd installer && \
+	tar -zcvf $(PACKAGE_NAME).tar.gz $(PACKAGE_NAME) && \
+	cd $(PACKAGE_NAME) && \
+	cp ../../installer-dep/install -r . && \
+	dh_make -n -s -c gpl3 -f ../$(PACKAGE_NAME).tar.gz -y && \
+	cp ../../installer-dep/debian/* ./debian/ && \
+	dpkg-buildpackage -rfakeroot -uc -b
 
 run-gui: gui
 	./build/Calculator
