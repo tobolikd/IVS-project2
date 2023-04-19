@@ -82,10 +82,10 @@ T power(T x, int n) {
 double root(double num, double n_);
 
 template<typename T>
-double sin(T x);
+double sin(T x) {return 0;}
 
 template<typename T>
-double cos(T x);
+double cos(T x) {return 0;}
 
 long long int factorial(unsigned int x);
 

@@ -258,6 +258,7 @@ double evaluateExpression(std::vector<token_t> expression){
     {'<', '<', '<', '>', '<', '>', '<', '<', '<', '>', '<'}, // √
     };
 
+
     vector<token_t> token_stack;
     vector<token_t> handle;
     token_t bottom_element;
