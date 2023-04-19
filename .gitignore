@@ -1,6 +1,12 @@
 # submission dir
 odevzdani
 
+# build dir
+build/**
+
+# IDE-specific
+.vscode/
+
 # pdfs
 *.pdf
 

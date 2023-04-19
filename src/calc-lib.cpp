@@ -317,14 +317,4 @@ double evaluateExpression(std::vector<token_t> expression){
     return 0;
 }
 
-/**
- * @brief Evaluates an expression containing float values and returns result.
- * 
- * @param expression vector of tokens representing an expression to be evaluated
- * @return float result
- */
-float evaluateFloatExpression(std::vector<token_t> expression){
-    return 0.0;
-}
-
 //**********End of file calc-lib.cpp************
