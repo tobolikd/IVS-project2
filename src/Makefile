@@ -21,7 +21,7 @@ OBJS = $(PROJ_OBJS) $(PROFILE_OBJS)
 QMAKE_PATH = qmake
 
 PACKAGE_NAME = calculator-1.0
-
+INSTALLER_DEPS = qt6-base-dev
 
 .PHONY: clean all gui
 
@@ -32,15 +32,18 @@ gui:
 	make
 
 installer:
+	sudo apt install -y $(INSTALLER_DEPS)
 	mkdir -p installer/$(PACKAGE_NAME)
+	mkdir -p ../install/
 	cp *.cpp *.hpp *.h *.ui *.pro installer/$(PACKAGE_NAME)/ && \
 	cd installer && \
 	tar -zcvf $(PACKAGE_NAME).tar.gz $(PACKAGE_NAME) && \
 	cd $(PACKAGE_NAME) && \
-	cp ../../installer-dep/install -r . && \
+	cp -r ../../installer-dep/install . && \
 	dh_make -n -s -c gpl3 -f ../$(PACKAGE_NAME).tar.gz -y && \
 	cp ../../installer-dep/debian/* ./debian/ && \
-	dpkg-buildpackage -rfakeroot -uc -b
+	dpkg-buildpackage -rfakeroot -uc -b && \
+	cd .. && cp calculator_1.0_amd64.deb ../../install/
 
 run-gui: gui
 	./build/Calculator
@@ -81,7 +84,7 @@ user_doc:
 
 clean: clean_user_doc
 	rm -f $(EXECS) $(OBJS) $(DEPS)
-	rm -rf build-test build html latex ../odevzdani ../*.zip
+	rm -rf build-test build html installer latex ../odevzdani ../*.zip
 
 clean_user_doc:
 	cd ../doc && make purge
