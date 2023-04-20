@@ -28,7 +28,7 @@ INSTALLER_DEPS = qt6-base-dev
 gui:
 	mkdir -p build
 	cd build && \
-	$(QMAKE_PATH) ../Calculator.pro $(QMFLAGS) && \
+	$(QMAKE_PATH) ../calculator.pro $(QMFLAGS) && \
 	make
 
 installer:
@@ -46,7 +46,7 @@ installer:
 	cd .. && cp calculator_1.0_amd64.deb ../../install/
 
 run-gui: gui
-	./build/Calculator
+	./build/calculator
 
 all: $(PROJ) $(PROFILE) $(GUI)
 
