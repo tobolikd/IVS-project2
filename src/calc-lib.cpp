@@ -17,6 +17,7 @@
 #include <cmath>
 #include <stdexcept>
 
+
 #include "calc-lib.hpp"
 
 using namespace std;
@@ -49,12 +50,12 @@ double factorial(double x) {
 }
 
 double binomial_coefficient(double n, double k) {
-    return factorial(n)/(factorial(k)*factorial(n-k));
+    return (n)/(factorial(k)*factorial(n-k));
 }
 
 /**
  * @brief Helper function for printing tokens.
- * 
+ *
  * @param token token to be printed
  */
 void printToken(token_t token){
@@ -96,7 +97,7 @@ token_t topTerminal(std::vector<token_t> token_vector){
     throw std::runtime_error("No terminal on stack found\n");
 }
 
-/**
+ /**
  * @brief Finds and pops handle from stack
  * 
  * @param stack vector of tokens representing stack
@@ -123,7 +124,7 @@ std::vector<token_t> getHandle(std::vector<token_t> *stack){
     return handle;
 
 }
-
+ 
 /**
  * @brief Performs calculation, creates token with result, and inserts it back into stack
  * 
@@ -260,6 +261,7 @@ std::vector<token_t> parseExpression(std::string expression) {
                     current.type = FAC_T;
                 if (c == 'C')
                     current.type = BIC_T;
+
                 tokens_vector.push_back(current);
             }
             else{
@@ -278,7 +280,7 @@ std::vector<token_t> parseExpression(std::string expression) {
     tokens_vector.push_back(end_token);
 
     return tokens_vector;
-}
+} // parseExpression()
 
 /**
  * @brief Evaluates an expression and returns result.
@@ -318,7 +320,7 @@ double evaluateExpression(std::vector<token_t> expression){
 
     
     while(!(token_stack.size() == 2 && token_stack.front().type == EXPR_T && token_stack[1].type == END_T && input.type == END_T)){
-        
+      
         switch (p_table[topTerminal(token_stack).type][input.type]){
             case '<':
                 insertHandleStart(&token_stack);
@@ -329,12 +331,12 @@ double evaluateExpression(std::vector<token_t> expression){
             case '>':
                 handle = getHandle(&token_stack);
                 calculateHandle(&token_stack, handle);
-                break;
+                break;    
             case '=':
                 token_stack.insert(token_stack.begin(), input);
                 input = expression.front();
                 expression.erase(expression.begin());
-                break;
+                break;      
             case 'x':
                 throw std::runtime_error("Invalid expression\n");
                 break;
@@ -344,5 +346,6 @@ double evaluateExpression(std::vector<token_t> expression){
 
     return token_stack.front().value;
 }
+
 
 //**********End of file calc-lib.cpp************
