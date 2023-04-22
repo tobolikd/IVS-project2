@@ -44,6 +44,7 @@ enum token_types{
     FAC_T,
     EXP_T,
     SQR_T,
+    BIC_T,
     EXPR_T,
     HANDLE_T
 };
@@ -87,7 +88,9 @@ double sin(T x);
 template<typename T>
 double cos(T x);
 
-long long int factorial(unsigned int x);
+double factorial(double x);
+
+double binomial_coefficient(double n, double k);
 
 std::vector<token_t> parseExpression(std::string expression);
 
