@@ -44,6 +44,7 @@ enum token_types{
     FAC_T,
     EXP_T,
     SQR_T,
+    BIC_T,
     EXPR_T,
     HANDLE_T
 };
@@ -109,6 +110,7 @@ T power(T x, int n) {
     return result;
 }
 
+
 /**
  * @brief Counts nth root of num
  * @param num Number to be "rooted"
@@ -130,12 +132,13 @@ double sin(T x) {return 0;}
 template<typename T>
 double cos(T x) {return 0;}
 
-
 /**
- * @brief Counts factorial of a given number
- * @param x Positive integer
-*/
-long long int factorial(unsigned int x);
+ * @brief Calculates the factorial of a given number
+ * @param x Input number
+ */
+double factorial(double x);
+
+double binomial_coefficient(double n, double k);
 
 std::vector<token_t> parseExpression(std::string expression);
 
