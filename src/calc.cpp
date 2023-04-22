@@ -195,7 +195,7 @@ void calc::evalInput()
     //      -- catch possible exceptions (from mathlib)
     //      -- convert userInputStr to mathlibInputStr
 
-    this->addUnclocedBrackets();
+    this->addUnclosedBrackets();
     this->convertExpression();
 
     double resultDouble = evaluateExpression(parseExpression(this->mathlibInputStr));
@@ -240,7 +240,7 @@ void calc::clearInputStrings()
  * @brief Adds unclosed brackets to the end of the expression
  * 
  */
-void calc::addUnclocedBrackets()
+void calc::addUnclosedBrackets()
 {
     this->updateUnclosedBrackets();
     //Add close unclosed brackets
