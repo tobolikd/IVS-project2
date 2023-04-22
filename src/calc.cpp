@@ -139,7 +139,7 @@ calc::calc(QWidget *parent)
 
     connect(signalMapper, SIGNAL(mappedString(QString)), this, SLOT(updateUserInput(QString)));
 
-}
+} // calc::calc()
 
 /**
  * @brief Calc class destructor
@@ -337,7 +337,3 @@ void calc::updateUserInput(QString qstr)
     qstr = QString::fromStdString(this->userInputStr);
     userInputLabel->setText(qstr);
 }
-
-
-
-
