@@ -319,33 +319,18 @@ double evaluateExpression(std::vector<token_t> expression){
     
     while(!(token_stack.size() == 2 && token_stack.front().type == EXPR_T && token_stack[1].type == END_T && input.type == END_T)){
         
-        /* DEBUG
-        cout<<"***stack: ***"<<endl;
-        printTokenVector(token_stack);
-        cout<<"***input token: ***"<<endl;
-        printToken(input);
-        cout<<endl;
-        cout<<"***remaining expression: ***"<<endl;
-        printTokenVector(expression);
-        cout<<topTerminal(token_stack).type<<endl;
-        cout<<input.type<<endl;
-        */
-
         switch (p_table[topTerminal(token_stack).type][input.type]){
             case '<':
-                //cout<<"<"<<endl;
                 insertHandleStart(&token_stack);
                 token_stack.insert(token_stack.begin(), input);
                 input = expression.front();
                 expression.erase(expression.begin());
                 break;
             case '>':
-                //cout<<">"<<endl;
                 handle = getHandle(&token_stack);
                 calculateHandle(&token_stack, handle);
                 break;
             case '=':
-                //cout<<"="<<endl;
                 token_stack.insert(token_stack.begin(), input);
                 input = expression.front();
                 expression.erase(expression.begin());
