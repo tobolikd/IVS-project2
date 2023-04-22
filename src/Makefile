@@ -1,18 +1,17 @@
 PROJ = calc
 PROFILE = prof
-DOCUMENTATION = calculator.html # TODO add documentation name
 ZIP = xtobol06_xtesar43_xsteti05_xhalen00.zip
 CC = gcc
-CFLAGS = -Wall -std=c11 -MMD
-LDLIBS = -lm
+CFLAGS = -Wall -std=c++20 -MMD
+LDLIBS = -lstdc++
 
 PROJ_SRCS = $(wildcard $(PROJ)*.cpp)
 PROFILE_SRCS = $(wildcard $(PROFILE)*.cpp)
 
-PROJ_OBJS = $(patsubst %.c,%.o,$(PROJ_SRCS))
-PROFILE_OBJS = $(patsubst %.c,%.o,$(PROFILE_SRCS))
+PROJ_OBJS = $(patsubst %.cpp,%.o,$(PROJ_SRCS))
+PROFILE_OBJS = $(patsubst %.cpp,%.o,$(PROFILE_SRCS))
 
-DEPS = $(SRCS:.c=.d)
+DEPS = $(SRCS:.cpp=.d)
 
 EXECS = $(PROJ) $(PROFILE)
 OBJS = $(PROJ_OBJS) $(PROFILE_OBJS)
@@ -42,7 +41,8 @@ pack_is:
 	cd .. && zip -r $(ZIP) hodnoceni.txt src dokumentace.pdf odevzdani.txt
 
 test:
-	cd build && cmake .. && cmake --build .
+	mkdir -p build
+	cd build && cmake .. && cmake --build . && ./tests-all
 
 doc:
 	doxygen

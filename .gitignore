@@ -1,6 +1,12 @@
 # submission dir
 odevzdani
 
+# build dir
+build/**
+
+# IDE-specific
+.vscode/
+
 # pdfs
 *.pdf
 
@@ -13,6 +19,8 @@ src/**
 # except for
 !src/Doxyfile
 !src/Makefile
+!src/CMakeLists.txt
+!src/tests
 !src/*.cpp
 !src/*.hpp
 
