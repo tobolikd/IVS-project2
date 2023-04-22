@@ -41,11 +41,6 @@ long long int factorial(unsigned int x) {
     return x;
 }
 
-/**
- * @brief Helper function for printing tokens.
- * 
- * @param token token to be printed
- */
 void printToken(token_t token){
     const char *type[] = {"+", "*", "(", ")", "id", ";", "/", "-", "!", "^", "√", "E", ">"};
 
@@ -57,11 +52,6 @@ void printToken(token_t token){
     }
 }
 
-/**
- * @brief Helper function for printing token vectors.
- * 
- * @param token_vector vector of tokens to be printed
- */
 void printTokenVector(std::vector<token_t> token_vector){
     for (int i=0; i<token_vector.size(); i++){
         printToken(token_vector[i]);
@@ -69,12 +59,6 @@ void printTokenVector(std::vector<token_t> token_vector){
     cout<<endl;
 }
 
-/**
- * @brief Finds the top most terminal token in token_vector.
- * 
- * @param token_vector vector of tokens
- * @return token_t terminal token
- */
 token_t topTerminal(std::vector<token_t> token_vector){
     for (int i=0; i<token_vector.size(); i++){
         if(token_vector[i].type!=EXPR_T){
@@ -233,7 +217,7 @@ std::vector<token_t> parseExpression(std::string expression) {
     tokens_vector.push_back(end_token);
 
     return tokens_vector;
-}
+} // parseExpression()
 
 /**
  * @brief Evaluates an expression and returns result.
@@ -315,6 +299,6 @@ double evaluateExpression(std::vector<token_t> expression){
 
     cout<<"result: "<<token_stack.front().value<<endl;
     return 0;
-}
+} // evaluateExpression()
 
 //**********End of file calc-lib.cpp************
