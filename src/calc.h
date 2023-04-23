@@ -48,9 +48,10 @@ private:
     std::string mathlibInputStr;
     std::string prevAnswer;
     bool result;
+    bool exception;
     unsigned int unclosedBrackets;
     void updateUnclosedBrackets();
-    void addUnclocedBrackets();
+    void addUnclosedBrackets();
     void convertExpression();
 
 
@@ -97,7 +98,8 @@ private:
             {Qt::Key_Minus,       "-"},
             {Qt::Key_Asterisk,    "*"},
             {Qt::Key_Slash,       "/"},
-            {Qt::Key_C,           "C"}
+            {Qt::Key_C,           "C"},
+            {Qt::Key_Period,      "."}
         };
 
         // If key is not found
