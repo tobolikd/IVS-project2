@@ -1,9 +1,11 @@
 PROJ = calc
 PROFILE = prof
 GUI = gui
+GUI = gui
 ZIP = xtobol06_xtesar43_xsteti05_xhalen00.zip
 CC = gcc
 CFLAGS = -Wall -std=c++20 -MMD
+QMFLAGS = -spec linux-g++ CONFIG+=qtquickcompiler
 QMFLAGS = -spec linux-g++ CONFIG+=qtquickcompiler
 LDLIBS = -lstdc++
 
@@ -71,6 +73,8 @@ pack_is:
 	cd .. && zip -r $(ZIP) hodnoceni.txt src dokumentace.pdf odevzdani.txt
 
 test:
+	mkdir -p build-tests
+	cd build-tests && cmake .. && cmake --build . && ./tests-all
 	mkdir -p build-tests
 	cd build-tests && cmake .. && cmake --build . && ./tests-all
 
