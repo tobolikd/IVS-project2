@@ -2,7 +2,7 @@
 Categories=Utility;Science;Qt;
 Exec=/opt/Calculator/bin/Calculator
 GenericName=Basic calculator
-Icon=/usr/share/pixmaps/calc.png
+Icon=/usr/share/pixmaps/calculator.png
 Name=Calculator
 Terminal=false
 Version=1.0
