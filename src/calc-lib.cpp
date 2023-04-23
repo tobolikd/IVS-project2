@@ -75,7 +75,7 @@ void printToken(token_t token){
  * @param token_vector vector of tokens to be printed
  */
 void printTokenVector(std::vector<token_t> token_vector){
-    for (int i=0; i<token_vector.size(); i++){
+    for (unsigned long i=0; i<token_vector.size(); i++){
         printToken(token_vector[i]);
     }
     cout<<endl;
@@ -88,7 +88,7 @@ void printTokenVector(std::vector<token_t> token_vector){
  * @return token_t terminal token
  */
 token_t topTerminal(std::vector<token_t> token_vector){
-    for (int i=0; i<token_vector.size(); i++){
+    for (unsigned long i=0; i<token_vector.size(); i++){
         if(token_vector[i].type!=EXPR_T){
             return token_vector[i];
         }
@@ -116,7 +116,7 @@ std::vector<token_t> getHandle(std::vector<token_t> *stack){
         }
     }
 
-    for (int i=0; i<handle.size(); i++){
+    for (unsigned long i=0; i<handle.size(); i++){
         stack->erase(stack->begin());
     }
     stack->erase(stack->begin());
@@ -229,7 +229,7 @@ std::vector<token_t> parseExpression(std::string expression) {
     vector<token_t> tokens_vector;
     token_t current;
     string token = "";
-    for (int i = 0; i < expression.size(); i++) {
+    for (unsigned long i = 0; i < expression.size(); i++) {
         char c = expression[i];
         if (isdigit(c) || c == '.') {
             token += c;
@@ -311,9 +311,6 @@ double evaluateExpression(std::vector<token_t> expression){
     token_t bottom_element;
     bottom_element.type = END_T;
     token_stack.insert(token_stack.begin(), bottom_element);
-
-    token_t handle_start;
-    handle_start.type = HANDLE_T;
 
     token_t input = expression.front();
     expression.erase(expression.begin());
