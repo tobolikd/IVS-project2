@@ -50,7 +50,13 @@ double factorial(double x) {
 }
 
 double binomial_coefficient(double n, double k) {
-    return (n)/(factorial(k)*factorial(n-k));
+    if (n < k) {
+        throw std::runtime_error("Invalid expression\n");
+    }
+    if (n == k) {
+        return 1;
+    }
+    return factorial(n)/(factorial(k)*factorial(n-k));
 }
 
 /**
