@@ -223,6 +223,8 @@ void insertHandleStart(std::vector<token_t> *stack){
  * @return vector<token_t> vector of tokens ready to be evaluated
  */
 std::vector<token_t> parseExpression(std::string expression) {
+    std::setlocale(LC_NUMERIC,"C");
+   
     //remove whitespace
     expression.erase(std::remove_if(expression.begin(), expression.end(), ::isspace), expression.end());
     

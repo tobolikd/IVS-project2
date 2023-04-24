@@ -16,6 +16,7 @@
 
 int main(int argc, char *argv[])
 {
+    std::setlocale(LC_NUMERIC,"C");
     QApplication a(argc, argv);
     calc w;
     w.show();
