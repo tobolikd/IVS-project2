@@ -14,7 +14,9 @@
 #include <regex>
 #include <cmath>
 #include <QSignalMapper>
+#include <QDesktopServices>
 #include <QKeyEvent>
+#include <QAction>
 
 #include "calc.h"
 #include "ui_calc.h"
@@ -84,6 +86,8 @@ calc::calc(QWidget *parent)
     QPushButton * div_button    = ui->Button_divide;
     QPushButton * mult_button   = ui->Button_multiply;
 
+    QAction  * action_manual       = ui->Action_userman;
+
 
     // Button mapping
     QSignalMapper * signalMapper = new QSignalMapper(this);
@@ -92,6 +96,8 @@ calc::calc(QWidget *parent)
     connect(clr_button,     SIGNAL(pressed()), this, SLOT(clearUserInput()));
     connect(del_button,     SIGNAL(pressed()), this, SLOT(deleteChar()));
     connect(equal_button,   SIGNAL(pressed()), this, SLOT(evalInput()));
+
+    connect(action_manual,  SIGNAL(triggered()), this, SLOT(openManual()));
 
     // Number buttons
     connect(but_num_0, SIGNAL(clicked(bool)), signalMapper, SLOT(map()));
@@ -368,5 +374,11 @@ void calc::updateUserInput(QString qstr)
     QLabel * userInputLabel = this->ui->userInput;
     qstr = QString::fromStdString(this->userInputStr);
     userInputLabel->setText(qstr);
+}
+
+
+void calc::openManual()
+{
+    QDesktopServices::openUrl(QUrl("file:///opt/calculator/userman.pdf"));
 }
 

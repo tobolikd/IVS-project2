@@ -41,6 +41,8 @@ private slots:
     void clearInputStrings();
     void deleteChar();
     void retrieveAnswer();
+    void openManual();
+
 
 private:
     Ui::calc *ui;
