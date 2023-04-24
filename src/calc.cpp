@@ -379,6 +379,6 @@ void calc::updateUserInput(QString qstr)
 
 void calc::openManual()
 {
-    QDesktopServices::openUrl(QUrl("file:///opt/calculator/userman.pdf"));
+    QDesktopServices::openUrl(QUrl("file:///opt/calculator/dokumentace.pdf"));
 }
 
