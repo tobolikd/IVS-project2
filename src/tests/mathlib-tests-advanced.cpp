@@ -1,6 +1,7 @@
 #include "gtest/gtest.h"
 
 #include <exception>
+#include <stdexcept>
 
 #include "../calc-lib.hpp"
 
@@ -65,7 +66,7 @@ TEST(Root, Zero){
     ASSERT_NEAR(0.0, root(0.0, 5.0), precision);
 }
 
-TEST(DISABLED_Root, NegativeNumber_PositiveEvenRoot){
+TEST(Root, NegativeNumber_PositiveEvenRoot){
     ASSERT_THROW(root(-8.0, 6.0), std::runtime_error);
 }
 
@@ -74,38 +75,31 @@ TEST(Root, NegativeNumber_PositiveOddRoot){
     ASSERT_NEAR(-2.0, root(-8.0, 3.0), precision);
 }
 
-TEST(DISABLED_Root, NegativeNumber_NegativeEvenRoot){
+TEST(Root, NegativeNumber_NegativeEvenRoot){
     ASSERT_THROW(root(-27.0, -2.0), std::runtime_error);
 }
 
-TEST(DISABLED_Root, NegativeNumber_NegativeOddRoot){
+TEST(Root, NegativeNumber_NegativeOddRoot){
     ASSERT_THROW(root(-27.0, -3.0), std::runtime_error);
 }
 
-TEST(Sin, Zero){
-    ASSERT_NEAR(0.0, sin(0.0), precision);
+TEST(BinomialCoefficient, ValidInput) {
+    ASSERT_EQ(binomial_coefficient(5, 2), 10);
 }
 
-TEST(Sin, Positive){
-    ASSERT_NEAR(0.8509, sin(1.2), precision);
-    ASSERT_NEAR(0.982, sin(0.832), precision);
+TEST(BinomialCoefficient, LargeNumber) {
+    ASSERT_NEAR(binomial_coefficient(50, 20), 47'129'212'243'960, 0.5);
 }
 
-TEST(Sin, Negative){
-    ASSERT_NEAR(-0.7568, sin(-0.9), precision);
-    ASSERT_NEAR(-0.544, sin(-0.6), precision);
+TEST(BinomialCoefficient, n_LessThan_k) {
+    ASSERT_THROW(binomial_coefficient(5, 10), std::runtime_error);
 }
 
-TEST(Cos, Zero){
-    ASSERT_NEAR(1.0, cos(0.0), precision);
+TEST(BinomialCoefficient, Negative_n) {
+    ASSERT_THROW(binomial_coefficient(-5, 2), std::runtime_error);
 }
 
-TEST(Cos, Positive){
-    ASSERT_NEAR(0.5253, cos(1.2), precision);
-    ASSERT_NEAR(0.188, cos(0.832), precision);
+TEST(BinomialCoefficient, Negative_k) {
+    ASSERT_THROW(binomial_coefficient(5, -2), std::runtime_error);
 }
 
-TEST(Cos, Negative){
-    ASSERT_NEAR(0.6536, cos(-0.9), precision);
-    ASSERT_NEAR(0.839, cos(-0.6), precision);
-}
