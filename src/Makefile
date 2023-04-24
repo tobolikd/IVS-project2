@@ -88,7 +88,7 @@ user_doc:
 
 clean: clean_user_doc
 	rm -f $(EXECS) $(OBJS) $(DEPS)
-	rm -rf build-test build html latex ../odevzdani ../*.zip
+	rm -rf build-test build html latex installer ../install ../odevzdani ../*.zip
 
 clean_user_doc:
 	cd ../doc && make purge
