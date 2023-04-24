@@ -20,6 +20,7 @@
 #include "ui_calc.h"
 #include "calc-lib.hpp"
 
+using namespace std;
 
 /**
  * @brief Calc class constructor
@@ -168,6 +169,7 @@ bool endsWith(std::string_view str, std::string_view substr)
     return str.size() >= substr.size() && 0 == str.compare(str.size()-substr.size(), substr.size(), substr);
 }
 
+
 /**
  * @brief Checks if number (double) is a whole number
  * 
@@ -188,6 +190,7 @@ void calc::convertExpression()
     this->mathlibInputStr = std::regex_replace(this->userInputStr, std::regex("√"), "_");
 }
 
+
 /**
  * @brief Evalueates user input, 
  * prints result on the screen,
@@ -206,8 +209,10 @@ void calc::evalInput()
     // Invalid expression
     try {
         resultDouble = evaluateExpression(parseExpression(this->mathlibInputStr));
-        std::cout << "MTLIB result: " << resultDouble << "\n";
         resultStr = std::to_string(resultDouble);
+        
+        // remove trailing zeroes
+        resultStr = std::regex_replace(resultStr, std::regex("([[:digit:]]*\\.[[:digit:]]*?)0+$"), "$1");
         this->prevAnswer = resultStr;
 
     } catch (const std::exception& e) {
