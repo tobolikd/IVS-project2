@@ -37,6 +37,7 @@ installer:
 	sudo apt install -y $(INSTALLER_DEPS)
 	mkdir -p installer/$(PACKAGE_NAME)
 	mkdir -p ../install/
+	cp ../doc/dokumentace.pdf installer-dep/install
 	cp *.cpp *.hpp *.h *.ui calculator.pro installer/$(PACKAGE_NAME)/ && \
 	cd installer && \
 	tar -zcvf $(PACKAGE_NAME).tar.gz $(PACKAGE_NAME) && \
