@@ -1,8 +1,10 @@
 PROJ = calc
 PROFILE = prof
+GUI = gui
 ZIP = xtobol06_xtesar43_xsteti05_xhalen00.zip
 CC = gcc
 CFLAGS = -Wall -std=c++20 -MMD
+QMFLAGS = -spec linux-g++ CONFIG+=qtquickcompiler
 LDLIBS = -lstdc++
 
 PROJ_SRCS = $(wildcard $(PROJ)*.cpp)
@@ -16,9 +18,20 @@ DEPS = $(SRCS:.cpp=.d)
 EXECS = $(PROJ) $(PROFILE)
 OBJS = $(PROJ_OBJS) $(PROFILE_OBJS)
 
-.PHONY: clean all
+QMAKE_PATH = qmake
 
-all: $(PROJ) $(PROFILE)
+.PHONY: clean all gui
+
+gui:
+	mkdir -p build
+	cd build && \
+	$(QMAKE_PATH) ../Calculator.pro $(QMFLAGS) && \
+	make
+
+run-gui: gui
+	./build/Calculator
+
+all: $(PROJ) $(PROFILE) $(GUI)
 
 $(PROJ): $(OBJS)
 $(PROFILE): $(PROFILE_OBJS)
@@ -41,8 +54,8 @@ pack_is:
 	cd .. && zip -r $(ZIP) hodnoceni.txt src dokumentace.pdf odevzdani.txt
 
 test:
-	mkdir -p build
-	cd build && cmake .. && cmake --build . && ./tests-all
+	mkdir -p build-tests
+	cd build-tests && cmake .. && cmake --build . && ./tests-all
 
 doc:
 	doxygen
@@ -54,7 +67,7 @@ user_doc:
 
 clean: clean_user_doc
 	rm -f $(EXECS) $(OBJS) $(DEPS)
-	rm -rf build html latex ../odevzdani ../*.zip
+	rm -rf build-test build html latex ../odevzdani ../*.zip
 
 clean_user_doc:
 	cd ../doc && make purge
