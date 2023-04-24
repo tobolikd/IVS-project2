@@ -84,7 +84,7 @@ void printToken(token_t token){
  * @param token_vector vector of tokens to be printed
  */
 void printTokenVector(std::vector<token_t> token_vector){
-    for (int i=0; i<token_vector.size(); i++){
+    for (unsigned long i=0; i<token_vector.size(); i++){
         printToken(token_vector[i]);
     }
     cout<<endl;
@@ -97,7 +97,7 @@ void printTokenVector(std::vector<token_t> token_vector){
  * @return token_t terminal token
  */
 token_t topTerminal(std::vector<token_t> token_vector){
-    for (int i=0; i<token_vector.size(); i++){
+    for (unsigned long i=0; i<token_vector.size(); i++){
         if(token_vector[i].type!=EXPR_T){
             return token_vector[i];
         }
@@ -125,7 +125,7 @@ std::vector<token_t> getHandle(std::vector<token_t> *stack){
         }
     }
 
-    for (int i=0; i<handle.size(); i++){
+    for (unsigned long i=0; i<handle.size(); i++){
         stack->erase(stack->begin());
     }
     stack->erase(stack->begin());
