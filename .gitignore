@@ -4,6 +4,7 @@ odevzdani
 # build dir
 !build/.gitkeep
 build/**
+install/
 
 # IDE-specific
 .vscode/
