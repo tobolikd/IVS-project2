@@ -4,8 +4,8 @@
  * @brief Calculator math library header - IVS Project 2022/23 // VUT FIT
  * @version 0.1
  * @date 2023-03-28
- * 
- * 
+ *
+ *
  */
 
 #ifndef IVS_MATH_LIB
@@ -20,7 +20,7 @@
 
 /**
 * @brief Token structure.
-* 
+*
 */
 typedef struct token
 {
@@ -30,7 +30,7 @@ typedef struct token
 
 /**
  * @brief Enumeration of token types.
- * 
+ *
  */
 enum token_types{
     ADD_T,
@@ -103,6 +103,9 @@ T divide(T x, T y) {
 */
 template<typename T>
 T power(T x, int n) {
+    if (n == 0 && x == 0)
+        throw std::runtime_error("Invalid expression: 0^0");
+
     T result = 1;
     for (int i = 0; i < n; i++) {
         result *= x;
@@ -118,19 +121,6 @@ T power(T x, int n) {
 */
 double root(double num, double n_);
 
-/**
- * @brief Counts sin(x)
- * @param x
-*/
-template<typename T>
-double sin(T x) {return 0;}
-
-/**
- * @brief Counts cos(x)
- * @param x
-*/
-template<typename T>
-double cos(T x) {return 0;}
 
 /**
  * @brief Calculates the factorial of a given number
@@ -146,21 +136,21 @@ double evaluateExpression(std::vector<token_t> expression);
 
 /**
  * @brief Helper function for printing tokens.
- * 
+ *
  * @param token token to be printed
  */
 void printToken(token_t token);
 
 /**
  * @brief Helper function for printing token vectors.
- * 
+ *
  * @param token_vector vector of tokens to be printed
  */
 void printTokenVector(std::vector<token_t> token_vector);
 
 /**
  * @brief Finds the top most terminal token in token_vector.
- * 
+ *
  * @param token_vector vector of tokens
  * @return token_t terminal token
  */

@@ -4,8 +4,8 @@
  * @brief Calculator math library - IVS Project 2022/23 // VUT FIT
  * @version 0.1
  * @date 2023-03-28
- * 
- * 
+ *
+ *
  */
 
 #include <stdexcept>
@@ -16,6 +16,7 @@
 #include <stack>
 #include <cmath>
 #include <stdexcept>
+#include <exception>
 
 
 #include "calc-lib.hpp"
@@ -23,6 +24,9 @@
 using namespace std;
 
 double root(double num, double n_){
+    if (n_ < 0)
+        throw runtime_error("Negative root base");
+
     double x;
     double A(num);
     double dx;
@@ -38,6 +42,11 @@ double root(double num, double n_){
 }
 
 double factorial(double x) {
+    if (x < 0)
+        throw std::runtime_error("Negative factorial");
+    if (x == 0)
+        return 1;
+
     double intpart = 0.0;
     double fracpart = std::modf(x, &intpart);
     if (fracpart != 0) {
@@ -50,7 +59,7 @@ double factorial(double x) {
 }
 
 double binomial_coefficient(double n, double k) {
-    return (n)/(factorial(k)*factorial(n-k));
+    return factorial(n)/(factorial(k)*factorial(n-k));
 }
 
 /**
@@ -71,11 +80,11 @@ void printToken(token_t token){
 
 /**
  * @brief Helper function for printing token vectors.
- * 
+ *
  * @param token_vector vector of tokens to be printed
  */
 void printTokenVector(std::vector<token_t> token_vector){
-    for (int i=0; i<token_vector.size(); i++){
+    for (unsigned long i=0; i<token_vector.size(); i++){
         printToken(token_vector[i]);
     }
     cout<<endl;
@@ -83,12 +92,12 @@ void printTokenVector(std::vector<token_t> token_vector){
 
 /**
  * @brief Finds the top most terminal token in token_vector.
- * 
+ *
  * @param token_vector vector of tokens
  * @return token_t terminal token
  */
 token_t topTerminal(std::vector<token_t> token_vector){
-    for (int i=0; i<token_vector.size(); i++){
+    for (unsigned long i=0; i<token_vector.size(); i++){
         if(token_vector[i].type!=EXPR_T){
             return token_vector[i];
         }
@@ -99,7 +108,7 @@ token_t topTerminal(std::vector<token_t> token_vector){
 
  /**
  * @brief Finds and pops handle from stack
- * 
+ *
  * @param stack vector of tokens representing stack
  * @return std::vector<token_t> vector of tokens representing handle
  */
@@ -116,7 +125,7 @@ std::vector<token_t> getHandle(std::vector<token_t> *stack){
         }
     }
 
-    for (int i=0; i<handle.size(); i++){
+    for (unsigned long i=0; i<handle.size(); i++){
         stack->erase(stack->begin());
     }
     stack->erase(stack->begin());
@@ -124,10 +133,10 @@ std::vector<token_t> getHandle(std::vector<token_t> *stack){
     return handle;
 
 }
- 
+
 /**
  * @brief Performs calculation, creates token with result, and inserts it back into stack
- * 
+ *
  * @param stack token vector representing stack
  * @param handle token vector representing handle
  */
@@ -144,7 +153,7 @@ void calculateHandle(std::vector<token_t> *stack, std::vector<token_t> handle){
         else {
             throw std::runtime_error("Invalid expression\n");
         }
-        
+
     }
     else if (handle.size() == 2){
         if (handle[0].type == EXPR_T && handle[1].type == FAC_T){
@@ -198,7 +207,7 @@ void calculateHandle(std::vector<token_t> *stack, std::vector<token_t> handle){
 
 /**
  * @brief Inserts special HANDLE_START symbol onto stack in correct position
- * 
+ *
  * @param stack token vector representing stack
  */
 void insertHandleStart(std::vector<token_t> *stack){
@@ -216,16 +225,16 @@ void insertHandleStart(std::vector<token_t> *stack){
 
 /**
  * @brief Parses an expression from string form into a vector of tokens.
- * 
+ *
  * Currently only supports +, -, *, / and parentheses
- * 
+ *
  * @param expression mathematical expression (e.g. 5*7+123)
  * @return vector<token_t> vector of tokens ready to be evaluated
  */
 std::vector<token_t> parseExpression(std::string expression) {
     //remove whitespace
     expression.erase(std::remove_if(expression.begin(), expression.end(), ::isspace), expression.end());
-    
+
     vector<token_t> tokens_vector;
     token_t current;
     string token = "";
@@ -284,7 +293,7 @@ std::vector<token_t> parseExpression(std::string expression) {
 
 /**
  * @brief Evaluates an expression and returns result.
- * 
+ *
  * @param expression vector of tokens representing an expression to be evaluated
  * @return double result
  */
@@ -306,6 +315,7 @@ double evaluateExpression(std::vector<token_t> expression){
     {'>', '<', '<', '>', '<', '>', '<', '>', '<', '<', '<', '>'}, // C
     };
 
+
     vector<token_t> token_stack;
     vector<token_t> handle;
     token_t bottom_element;
@@ -318,9 +328,9 @@ double evaluateExpression(std::vector<token_t> expression){
     token_t input = expression.front();
     expression.erase(expression.begin());
 
-    
+
     while(!(token_stack.size() == 2 && token_stack.front().type == EXPR_T && token_stack[1].type == END_T && input.type == END_T)){
-      
+
         switch (p_table[topTerminal(token_stack).type][input.type]){
             case '<':
                 insertHandleStart(&token_stack);
@@ -331,12 +341,12 @@ double evaluateExpression(std::vector<token_t> expression){
             case '>':
                 handle = getHandle(&token_stack);
                 calculateHandle(&token_stack, handle);
-                break;    
+                break;
             case '=':
                 token_stack.insert(token_stack.begin(), input);
                 input = expression.front();
                 expression.erase(expression.begin());
-                break;      
+                break;
             case 'x':
                 throw std::runtime_error("Invalid expression\n");
                 break;
