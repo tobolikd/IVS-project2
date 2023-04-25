@@ -80,7 +80,9 @@ run: $(PROJ)
 pack: purge doc user_doc installer installer-prof clean
 	mkdir -p ../odevzdani/repo
 	cd ../doc && make purge
-	mv -r ../install ../odevzdani
+	mv ../install ../odevzdani
+	mv html ../odevzdani/doc
+	cd .. && rsync -a --exclude="odevzdani/" * odevzdani/repo
 	mv repo/src/html ../odevzdani/doc
 	cd .. && rsync -a --exclude="odevzdani/" * odevzdani/repo
 	cd ../odevzdani && zip -r $(ZIP) * && mv $(ZIP) ..
