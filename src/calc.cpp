@@ -13,15 +13,19 @@
 #include <string>
 #include <regex>
 #include <cmath>
+#include <cmath>
 #include <QSignalMapper>
 #include <QDesktopServices>
+#include <QDesktopServices>
 #include <QKeyEvent>
+#include <QAction>
 #include <QAction>
 
 #include "calc.h"
 #include "ui_calc.h"
 #include "calc-lib.hpp"
 
+using namespace std;
 using namespace std;
 
 /**
@@ -49,7 +53,11 @@ calc::calc(QWidget *parent)
     prevAnswer = "";
 
     // Indicates result is being shown
+    // Indicates result is being shown
     result = false;
+
+    // Indicates exception being shown
+    exception = false;
 
     // Indicates exception being shown
     exception = false;
@@ -58,6 +66,7 @@ calc::calc(QWidget *parent)
     unclosedBrackets = 0;
 
     // Number buttons
+    QPushButton * but_num_0 = ui->Button_num0;
     QPushButton * but_num_0 = ui->Button_num0;
     QPushButton * but_num_1 = ui->Button_num1;
     QPushButton * but_num_2 = ui->Button_num2;
@@ -88,6 +97,8 @@ calc::calc(QWidget *parent)
 
     QAction  * action_manual       = ui->Action_userman;
 
+    QAction  * action_manual       = ui->Action_userman;
+
 
     // Button mapping
     QSignalMapper * signalMapper = new QSignalMapper(this);
@@ -99,7 +110,10 @@ calc::calc(QWidget *parent)
 
     connect(action_manual,  SIGNAL(triggered()), this, SLOT(openManual()));
 
+    connect(action_manual,  SIGNAL(triggered()), this, SLOT(openManual()));
+
     // Number buttons
+    connect(but_num_0, SIGNAL(clicked(bool)), signalMapper, SLOT(map()));
     connect(but_num_0, SIGNAL(clicked(bool)), signalMapper, SLOT(map()));
     connect(but_num_1, SIGNAL(clicked(bool)), signalMapper, SLOT(map()));
     connect(but_num_2, SIGNAL(clicked(bool)), signalMapper, SLOT(map()));
@@ -125,6 +139,7 @@ calc::calc(QWidget *parent)
     connect(sqrt_button,    SIGNAL(clicked(bool)), signalMapper, SLOT(map()));
 
     // Number mapping
+    signalMapper -> setMapping(but_num_0, "0");
     signalMapper -> setMapping(but_num_0, "0");
     signalMapper -> setMapping(but_num_1, "1");
     signalMapper -> setMapping(but_num_2, "2");
@@ -152,6 +167,7 @@ calc::calc(QWidget *parent)
     connect(signalMapper, SIGNAL(mappedString(QString)), this, SLOT(updateUserInput(QString)));
 
 }
+}
 
 /**
  * @brief Calc class destructor
@@ -176,6 +192,7 @@ bool endsWith(std::string_view str, std::string_view substr)
 }
 
 
+
 /**
  * @brief Checks if number (double) is a whole number
  * 
@@ -184,6 +201,7 @@ bool endsWith(std::string_view str, std::string_view substr)
  * @return false number is whole
  */
 bool isWhole(double input){
+    return floor(input) == ceil(input);
     return floor(input) == ceil(input);
 }
 
@@ -197,6 +215,7 @@ void calc::convertExpression()
 }
 
 
+
 /**
  * @brief Evalueates user input, 
  * prints result on the screen,
@@ -205,6 +224,7 @@ void calc::convertExpression()
  */
 void calc::evalInput()
 {
+    this->addUnclosedBrackets();
     this->addUnclosedBrackets();
     this->convertExpression();
 
@@ -229,8 +249,17 @@ void calc::evalInput()
 
     // If result is a whole number display only the whole part
     if(isWhole(resultDouble) && !exceptionOccured){
+    if(isWhole(resultDouble) && !exceptionOccured){
         resultStr = std::to_string((int)resultDouble);
     }
+
+    // Number too big
+    if(resultDouble > 10e+10 && !exceptionOccured){
+        resultStr = "Number out of range";
+        exceptionOccured = true;
+    }
+
+    this->clearUserInput();
 
     // Number too big
     if(resultDouble > 10e+10 && !exceptionOccured){
@@ -243,6 +272,7 @@ void calc::evalInput()
     QString qResultStr= QString::fromStdString(resultStr);
     this->updateUserInput(qResultStr);
     this->result = true;
+    this->exception = exceptionOccured;
     this->exception = exceptionOccured;
 }
 
@@ -273,6 +303,7 @@ void calc::clearInputStrings()
  * 
  */
 void calc::addUnclosedBrackets()
+void calc::addUnclosedBrackets()
 {
     this->updateUnclosedBrackets();
     //Add close unclosed brackets
@@ -290,14 +321,18 @@ void calc::addUnclosedBrackets()
 void calc::updateUnclosedBrackets()
 {
     unsigned unclosedBrackets = 0;
+    unsigned unclosedBrackets = 0;
     for(auto &chr : this->userInputStr){
         if(chr == '('){
+            unclosedBrackets++;
             unclosedBrackets++;
         }
         else if(chr == ')' && this->unclosedBrackets){
             unclosedBrackets--;
+            unclosedBrackets--;
         }
     }
+    this->unclosedBrackets = unclosedBrackets;
     this->unclosedBrackets = unclosedBrackets;
 }
 
@@ -338,6 +373,7 @@ void calc::deleteChar()
 void calc::clearUserInput()
 {
     this->exception = false;
+    this->exception = false;
     this->clearInputStrings();
     QString qstr = QString::fromStdString(userInputStr);
     this->updateUserInput(qstr);
@@ -359,10 +395,18 @@ void calc::updateUserInput(QString qstr)
         this->exception = false;
     }
 
+     
+    if(this->exception){
+        this->userInputStr = "";
+        this->exception = false;
+    }
+
     if(this->result){
+        this->userInputStr = "";
         this->userInputStr = "";
         this->result = false;
     }
+   
    
     // Insert default 2 before √ (if no other number specified)
     if(str == "√" && !isdigit(this->userInputStr[this->userInputStr.length() - 1])){
@@ -377,6 +421,13 @@ void calc::updateUserInput(QString qstr)
     qstr = QString::fromStdString(this->userInputStr);
     userInputLabel->setText(qstr);
 }
+
+
+void calc::openManual()
+{
+    QDesktopServices::openUrl(QUrl("file:///opt/calculator/dokumentace.pdf"));
+}
+
 
 
 void calc::openManual()
