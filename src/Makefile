@@ -1,5 +1,5 @@
 PROJ = calc
-PROFILE = prof
+PROFILE = stddev
 GUI = gui
 ZIP = xtobol06_xtesar43_xsteti05_xhalen00.zip
 CC = gcc
@@ -21,7 +21,10 @@ OBJS = $(PROJ_OBJS) $(PROFILE_OBJS)
 QMAKE_PATH = qmake
 
 PACKAGE_NAME = calculator-1.0
-INSTALLER_DEPS = qt6-base-dev
+INSTALLER_DEPS = qt6-base-dev qtbase5-dev
+
+PROFILER_NAME = stddev-1.0
+PROFILER_SOURCES = $(PROFILE).cpp calc-lib.hpp
 
 .PHONY: clean all gui
 
@@ -31,7 +34,7 @@ gui:
 	$(QMAKE_PATH) ../calculator.pro $(QMFLAGS) && \
 	make
 
-installer:
+installer: clean
 	sudo apt install -y $(INSTALLER_DEPS)
 	mkdir -p installer/$(PACKAGE_NAME)
 	mkdir -p ../install/
@@ -44,6 +47,19 @@ installer:
 	cp ../../installer-dep/debian/* ./debian/ && \
 	dpkg-buildpackage -rfakeroot -uc -b && \
 	cd .. && cp calculator_1.0_amd64.deb ../../install/
+
+installer-prof: clean
+	mkdir -p installer/$(PROFILER_NAME)
+	mkdir -p ../install/
+	cp $(PROFILER_SOURCES) installer/$(PROFILER_NAME)/ && \
+	cd installer && \
+	tar -zcvf $(PROFILER_NAME).tar.gz $(PROFILER_NAME) && \
+	cd $(PROFILER_NAME) && \
+	cp -r ../../installer-$(PROFILE)-dep/install . && \
+	dh_make -n -s -c gpl3 -f ../$(PROFILER_NAME).tar.gz -y && \
+	cp ../../installer-$(PROFILE)-dep/debian/* ./debian/ && \
+	dpkg-buildpackage -rfakeroot -uc -b && \
+	cd .. && cp *.deb ../../install/
 
 run-gui: gui
 	./build/calculator
