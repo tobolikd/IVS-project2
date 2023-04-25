@@ -31,6 +31,8 @@ QPushButton{
 	font-size:40px;
 	background-color:black;
 	border: 1px solid white;
+	border-radius: 12px;
+	margin: 5px;
 	width:100%;
 	height:100%;
 	min-width:10px;
@@ -39,6 +41,15 @@ QPushButton{
 
 QPushButton:hover{
 	background-color:grey;
+}
+
+QAction{
+	color:white;
+	background-color:black;
+}
+QAction:hover{
+	color:black;
+	background-color:white;
 }</string>
   </property>
   <widget class="QWidget" name="centralwidget">
@@ -128,9 +139,9 @@ QPushButton:hover{
          </widget>
         </item>
         <item row="4" column="3">
-         <widget class="QPushButton" name="Button_point">
+         <widget class="QPushButton" name="Button_num0">
           <property name="text">
-           <string>.</string>
+           <string>0</string>
           </property>
          </widget>
         </item>
@@ -240,9 +251,9 @@ QPushButton:hover{
          </widget>
         </item>
         <item row="4" column="4">
-         <widget class="QPushButton" name="Button_answer">
+         <widget class="QPushButton" name="Button_point">
           <property name="text">
-           <string>ANS</string>
+           <string>.</string>
           </property>
          </widget>
         </item>
@@ -253,6 +264,33 @@ QPushButton:hover{
    </layout>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>800</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>Help</string>
+    </property>
+    <addaction name="Action_userman"/>
+   </widget>
+   <addaction name="menuHelp"/>
+  </widget>
+  <action name="actionUser_manual">
+   <property name="text">
+    <string>User manual</string>
+   </property>
+  </action>
+  <action name="Action_userman">
+   <property name="text">
+    <string>User manual</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>

@@ -12,13 +12,18 @@
 #include <map>
 #include <string>
 #include <regex>
+#include <cmath>
+#include <ctype.h>
 #include <QSignalMapper>
+#include <QDesktopServices>
 #include <QKeyEvent>
+#include <QAction>
 
 #include "calc.h"
 #include "ui_calc.h"
 #include "calc-lib.hpp"
 
+using namespace std;
 
 /**
  * @brief Calc class constructor
@@ -44,13 +49,17 @@ calc::calc(QWidget *parent)
     // Previous answer (retrievable with ANS button)
     prevAnswer = "";
 
-    // Indicates if result is being shown
+    // Indicates result is being shown
     result = false;
+
+    // Indicates exception being shown
+    exception = false;
 
     // Auto close brackets after "equals" button
     unclosedBrackets = 0;
 
     // Number buttons
+    QPushButton * but_num_0 = ui->Button_num0;
     QPushButton * but_num_1 = ui->Button_num1;
     QPushButton * but_num_2 = ui->Button_num2;
     QPushButton * but_num_3 = ui->Button_num3;
@@ -66,7 +75,6 @@ calc::calc(QWidget *parent)
     QPushButton * clr_button    = ui->Button_clr;
     QPushButton * del_button    = ui->Button_del;
     QPushButton * equal_button  = ui->Button_equal;
-    QPushButton * answ_button   = ui->Button_answer;
 
     QPushButton * comb_button   = ui->Button_comb;
     QPushButton * fact_button   = ui->Button_fact;
@@ -79,6 +87,8 @@ calc::calc(QWidget *parent)
     QPushButton * div_button    = ui->Button_divide;
     QPushButton * mult_button   = ui->Button_multiply;
 
+    QAction  * action_manual       = ui->Action_userman;
+
 
     // Button mapping
     QSignalMapper * signalMapper = new QSignalMapper(this);
@@ -87,9 +97,11 @@ calc::calc(QWidget *parent)
     connect(clr_button,     SIGNAL(pressed()), this, SLOT(clearUserInput()));
     connect(del_button,     SIGNAL(pressed()), this, SLOT(deleteChar()));
     connect(equal_button,   SIGNAL(pressed()), this, SLOT(evalInput()));
-    connect(answ_button,    SIGNAL(pressed()), this, SLOT(retrieveAnswer()));
+
+    connect(action_manual,  SIGNAL(triggered()), this, SLOT(openManual()));
 
     // Number buttons
+    connect(but_num_0, SIGNAL(clicked(bool)), signalMapper, SLOT(map()));
     connect(but_num_1, SIGNAL(clicked(bool)), signalMapper, SLOT(map()));
     connect(but_num_2, SIGNAL(clicked(bool)), signalMapper, SLOT(map()));
     connect(but_num_3, SIGNAL(clicked(bool)), signalMapper, SLOT(map()));
@@ -114,6 +126,7 @@ calc::calc(QWidget *parent)
     connect(sqrt_button,    SIGNAL(clicked(bool)), signalMapper, SLOT(map()));
 
     // Number mapping
+    signalMapper -> setMapping(but_num_0, "0");
     signalMapper -> setMapping(but_num_1, "1");
     signalMapper -> setMapping(but_num_2, "2");
     signalMapper -> setMapping(but_num_3, "3");
@@ -163,6 +176,29 @@ bool endsWith(std::string_view str, std::string_view substr)
     return str.size() >= substr.size() && 0 == str.compare(str.size()-substr.size(), substr.size(), substr);
 }
 
+std::string removeTrailingZeroes(std::string str){
+    std::string newStr = str;
+
+    bool isDecimal = false;
+    for(unsigned i = 0; i < str.size(); i++){
+        if(str[i] == '.'){
+            isDecimal = true;
+            break;
+        }
+    }
+
+    if(!isDecimal) return str;
+    
+    for(unsigned i = str.size()-1; i < str.size(); i--){
+        if((isdigit(str[i]) && str[i] != '0') || str[i] == '.'){
+            return newStr;
+        }
+        newStr = newStr.substr(0, newStr.size()-1);
+    }
+    return newStr;
+}
+
+
 /**
  * @brief Checks if number (double) is a whole number
  * 
@@ -171,7 +207,7 @@ bool endsWith(std::string_view str, std::string_view substr)
  * @return false number is whole
  */
 bool isWhole(double input){
-    return input == (double)(int)input;
+    return floor(input) == ceil(input);
 }
 
 /**
@@ -183,6 +219,7 @@ void calc::convertExpression()
     this->mathlibInputStr = std::regex_replace(this->userInputStr, std::regex("√"), "_");
 }
 
+
 /**
  * @brief Evalueates user input, 
  * prints result on the screen,
@@ -191,27 +228,45 @@ void calc::convertExpression()
  */
 void calc::evalInput()
 {
-    // TODO -- connect with mathlib
-    //      -- catch possible exceptions (from mathlib)
-    //      -- convert userInputStr to mathlibInputStr
-
-    this->addUnclocedBrackets();
+    this->addUnclosedBrackets();
     this->convertExpression();
 
-    double resultDouble = evaluateExpression(parseExpression(this->mathlibInputStr));
-    this->clearUserInput();
+    std::string resultStr;
+    double resultDouble = 0;
+    bool exceptionOccured = false;
 
-    std::string resultStr = std::to_string(resultDouble);
+    // Invalid expression
+    try {
+        resultDouble = evaluateExpression(parseExpression(this->mathlibInputStr));
+        resultStr = std::to_string(resultDouble);
+    
+        // remove trailing zeroes
+        resultStr = std::regex_replace(resultStr, std::regex("\\.0+$"), "");
+        resultStr = removeTrailingZeroes(resultStr);
+        this->prevAnswer = resultStr;
+
+    } catch (const std::exception& e) {
+        resultStr = "Invalid expression";
+        exceptionOccured = true;
+    }
 
     // If result is a whole number display only the whole part
-    if(isWhole(resultDouble)){
+    if(isWhole(resultDouble) && !exceptionOccured){
         resultStr = std::to_string((int)resultDouble);
     }
 
+    // Number too big
+    if(resultDouble > 10e+10 && !exceptionOccured){
+        resultStr = "Number out of range";
+        exceptionOccured = true;
+    }
+
+    this->clearUserInput();
+
     QString qResultStr= QString::fromStdString(resultStr);
-    this->prevAnswer = resultStr;
     this->updateUserInput(qResultStr);
     this->result = true;
+    this->exception = exceptionOccured;
 }
 
 /**
@@ -240,7 +295,7 @@ void calc::clearInputStrings()
  * @brief Adds unclosed brackets to the end of the expression
  * 
  */
-void calc::addUnclocedBrackets()
+void calc::addUnclosedBrackets()
 {
     this->updateUnclosedBrackets();
     //Add close unclosed brackets
@@ -257,16 +312,19 @@ void calc::addUnclocedBrackets()
  */
 void calc::updateUnclosedBrackets()
 {
-    this->unclosedBrackets = 0;
+    unsigned unclosedBrackets = 0;
     for(auto &chr : this->userInputStr){
         if(chr == '('){
-            this->unclosedBrackets++;
+            unclosedBrackets++;
         }
         else if(chr == ')' && this->unclosedBrackets){
-            this->unclosedBrackets--;
+            unclosedBrackets--;
         }
     }
+    this->unclosedBrackets = unclosedBrackets;
 }
+
+
 
 
 /**
@@ -300,10 +358,10 @@ void calc::deleteChar()
 /**
  * @brief Clears user input from the screen, 
  * connected with the 'CLR' button
- * 
  */
 void calc::clearUserInput()
 {
+    this->exception = false;
     this->clearInputStrings();
     QString qstr = QString::fromStdString(userInputStr);
     this->updateUserInput(qstr);
@@ -319,11 +377,17 @@ void calc::updateUserInput(QString qstr)
     std::string str = qstr.toStdString();
 
     // If result is being shown, delete it first
-    if(this->result){
-        this->clearInputStrings();
-        this->result = false;
+     
+    if(this->exception){
+        this->userInputStr = "";
+        this->exception = false;
     }
 
+    if(this->result){
+        this->userInputStr = "";
+        this->result = false;
+    }
+   
     // Insert default 2 before √ (if no other number specified)
     if(str == "√" && !isdigit(this->userInputStr[this->userInputStr.length() - 1])){
         this->userInputStr += "2";
@@ -339,5 +403,8 @@ void calc::updateUserInput(QString qstr)
 }
 
 
-
+void calc::openManual()
+{
+    QDesktopServices::openUrl(QUrl("file:///opt/calculator/dokumentace.pdf"));
+}
 

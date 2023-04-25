@@ -23,6 +23,9 @@ QT_BEGIN_NAMESPACE
 namespace Ui { class calc; }
 QT_END_NAMESPACE
 
+/**
+ * @brief Calculator window class
+*/
 class calc : public QMainWindow
 {
     Q_OBJECT
@@ -38,6 +41,8 @@ private slots:
     void clearInputStrings();
     void deleteChar();
     void retrieveAnswer();
+    void openManual();
+
 
 private:
     Ui::calc *ui;
@@ -45,9 +50,10 @@ private:
     std::string mathlibInputStr;
     std::string prevAnswer;
     bool result;
+    bool exception;
     unsigned int unclosedBrackets;
     void updateUnclosedBrackets();
-    void addUnclocedBrackets();
+    void addUnclosedBrackets();
     void convertExpression();
 
 
@@ -94,7 +100,8 @@ private:
             {Qt::Key_Minus,       "-"},
             {Qt::Key_Asterisk,    "*"},
             {Qt::Key_Slash,       "/"},
-            {Qt::Key_C,           "C"}
+            {Qt::Key_C,           "C"},
+            {Qt::Key_Period,      "."}
         };
 
         // If key is not found
@@ -105,5 +112,5 @@ private:
         // Print user input on screen
         this->updateUserInput(QString::fromStdString(keyToSymbol[event->key()]));
 
-    }};
+    }}; // class calc
 #endif // CALC_H
