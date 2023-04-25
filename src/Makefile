@@ -135,7 +135,7 @@ clean: clean_user_doc
 	rm -rf build-tests build latex installer ../odevzdani ../*.zip
 
 purge: clean
-	rm -rf ../install html $(PROF_DIR)
+	rm -rf ../install html
 
 
 clean_user_doc:
