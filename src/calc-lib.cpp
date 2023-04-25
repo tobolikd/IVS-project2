@@ -22,6 +22,11 @@
 
 using namespace std;
 
+/**
+ * @brief Compute nth root of a num
+ * @param num Base
+ * @param n_ Exponent
+*/
 double root(double num, double n_) {
     double intpart = 0.0;
     double fracpart = std::modf(n_, &intpart);
@@ -51,6 +56,11 @@ double root(double num, double n_) {
    return x;
 }
 
+/**
+ * @brief Compute x!
+ * @param x
+ * @return Factorial of x
+*/
 double factorial(double x) {
     double intpart = 0.0;
     double fracpart = std::modf(x, &intpart);
@@ -69,6 +79,12 @@ double factorial(double x) {
     return x;
 }
 
+/**
+ * @brief Finds binomial coefficient of a given n and k
+ * @param n
+ * @param k
+ * @return double result
+*/
 double binomial_coefficient(double n, double k) {
     if (n < k) {
         throw std::runtime_error("Invalid expression\n");
