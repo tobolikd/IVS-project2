@@ -48,7 +48,7 @@ installer: clean
 	dpkg-buildpackage -rfakeroot -uc -b && \
 	cd .. && cp calculator_1.0_amd64.deb ../../install/
 
-installer-prof: clean
+installer-prof: clean profile
 	mkdir -p installer/$(PROFILER_NAME)
 	mkdir -p ../install/
 	cp $(PROFILER_SOURCES) installer/$(PROFILER_NAME)/ && \
@@ -58,6 +58,8 @@ installer-prof: clean
 	cp -r ../../installer-$(PROFILE)-dep/install . && \
 	dh_make -n -s -c gpl3 -f ../$(PROFILER_NAME).tar.gz -y && \
 	cp ../../installer-$(PROFILE)-dep/debian/* ./debian/ && \
+	mkdir -p ./debian/usr/bin && \
+	cp $(PROFILE) ./debian/usr/bin && \
 	dpkg-buildpackage -rfakeroot -uc -b && \
 	cd .. && cp *.deb ../../install/
 
