@@ -1,0 +1,13 @@
+Source: calculator
+Section: science
+Priority: extra
+Maintainer: Jakub Štětina <xsteti05@stud.fit.vut.cz>
+Rules-Requires-Root: no
+Build-Depends:qtbase5-dev, qt6-base-dev, debhelper-compat (= 13),
+
+Package: calculator
+Architecture: amd64
+Depends:
+ ${shlibs:Depends},
+ ${misc:Depends},
+Description: Basic calculator
