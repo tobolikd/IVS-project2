@@ -80,9 +80,11 @@ run: $(PROJ)
 pack: purge doc user_doc installer installer-prof clean
 	mkdir -p ../odevzdani/repo
 	cd ../doc && make purge
-	mv -r ../install ../odevzdani
+	mv ../install ../odevzdani
+	mv html ../odevzdani/doc
 	cd .. && rsync -a --exclude="odevzdani/" * odevzdani/repo
 	mv repo/src/html ../odevzdani/doc
+	cd .. && rsync -a --exclude="odevzdani/" * odevzdani/repo
 	cd ../odevzdani && zip -r $(ZIP) * && mv $(ZIP) ..
 
 # pack minimal version for VUT IS
@@ -131,10 +133,10 @@ user_doc:
 
 clean: clean_user_doc
 	rm -f $(EXECS) $(OBJS) $(DEPS)
-	rm -rf build-tests build html latex installer ../odevzdani ../*.zip
+	rm -rf build-tests build latex installer ../odevzdani ../*.zip
 
 purge: clean
-	rm -rf ../install $(PROF_DIR)
+	rm -rf ../install html $(PROF_DIR)
 
 
 clean_user_doc:
