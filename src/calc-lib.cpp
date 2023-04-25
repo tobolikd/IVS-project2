@@ -22,7 +22,21 @@
 
 using namespace std;
 
-double root(double num, double n_){
+double root(double num, double n_) {
+    double intpart = 0.0;
+    double fracpart = std::modf(n_, &intpart);
+
+    if (fracpart != 0) {
+        throw std::runtime_error("Not an integer in root\n");
+    }
+
+    if (num < 0) {
+        if ((int(intpart) % 2) == 0 || intpart < 0) {
+        throw std::runtime_error("Negative num and even n\n");
+        }
+    }
+    
+
     double x;
     double A(num);
     double dx;
@@ -42,6 +56,12 @@ double factorial(double x) {
     double fracpart = std::modf(x, &intpart);
     if (fracpart != 0) {
         throw std::runtime_error("Not an integer in factorial\n");
+    }
+    if (x == 0) {
+        return 1;
+    }
+    if (x < 0) {
+        throw std::runtime_error("Negative integer in factorial\n");
     }
     for (unsigned int i=x-1; i>0; i--){
         x=x*i;

@@ -103,6 +103,9 @@ T divide(T x, T y) {
 */
 template<typename T>
 T power(T x, int n) {
+    if (x == 0 && n == 0) {
+        throw std::runtime_error("0 to the power of 0\n");
+    }
     T result = 1;
     for (int i = 0; i < n; i++) {
         result *= x;
