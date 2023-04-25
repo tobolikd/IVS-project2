@@ -13,6 +13,7 @@
 #include <string>
 #include <regex>
 #include <cmath>
+#include <ctype.h>
 #include <QSignalMapper>
 #include <QDesktopServices>
 #include <QKeyEvent>
@@ -175,6 +176,28 @@ bool endsWith(std::string_view str, std::string_view substr)
     return str.size() >= substr.size() && 0 == str.compare(str.size()-substr.size(), substr.size(), substr);
 }
 
+std::string removeTrailingZeroes(std::string str){
+    std::string newStr = str;
+
+    bool isDecimal = false;
+    for(unsigned i = 0; i < str.size(); i++){
+        if(str[i] == '.'){
+            isDecimal = true;
+            break;
+        }
+    }
+
+    if(!isDecimal) return str;
+    
+    for(unsigned i = str.size()-1; i < str.size(); i--){
+        if((isdigit(str[i]) && str[i] != '0') || str[i] == '.'){
+            return newStr;
+        }
+        newStr = newStr.substr(0, newStr.size()-1);
+    }
+    return newStr;
+}
+
 
 /**
  * @brief Checks if number (double) is a whole number
@@ -216,9 +239,10 @@ void calc::evalInput()
     try {
         resultDouble = evaluateExpression(parseExpression(this->mathlibInputStr));
         resultStr = std::to_string(resultDouble);
-        
+    
         // remove trailing zeroes
-        resultStr = std::regex_replace(resultStr, std::regex("([[:digit:]]*\\.[[:digit:]]*?)0+$"), "$1");
+        resultStr = std::regex_replace(resultStr, std::regex("\\.0+$"), "");
+        resultStr = removeTrailingZeroes(resultStr);
         this->prevAnswer = resultStr;
 
     } catch (const std::exception& e) {
@@ -301,6 +325,8 @@ void calc::updateUnclosedBrackets()
 }
 
 
+
+
 /**
  * @brief Deletes one character from user input, 
  * connected with the 'DEL' button
@@ -332,7 +358,6 @@ void calc::deleteChar()
 /**
  * @brief Clears user input from the screen, 
  * connected with the 'CLR' button
- * 
  */
 void calc::clearUserInput()
 {
