@@ -270,8 +270,29 @@ std::vector<token_t> parseExpression(std::string expression) {
             if (c == '+' || c == '-' || c == '*' || c == '/' || c== '^' || c== '_' || c== '!' || c== 'C' || c == '(' || c == ')') {
                 if (c == '+')
                     current.type = ADD_T;
-                if (c == '-')
-                    current.type = SUB_T;
+                if (c == '-') {
+                    if (tokens_vector.size() == 0) {
+                        if (token == "") {
+                            token += c;
+                            continue;
+                        }
+                        else {
+                            throw std::runtime_error("Invalid expression\n");
+                        }
+                    }
+                    else if (tokens_vector.back().type == LBR_T) {
+                        if (token == "") {
+                            token += c;
+                            continue;
+                        }
+                        else {
+                            throw std::runtime_error("Invalid expression\n");
+                        }
+                    }
+                    else {
+                        current.type = SUB_T;
+                    }
+                }
                 if (c == '*')
                     current.type = MUL_T;
                 if (c == '/')
