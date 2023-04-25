@@ -120,11 +120,7 @@ user_doc:
 
 clean: clean_user_doc
 	rm -f $(EXECS) $(OBJS) $(DEPS)
-<<<<<<< HEAD
-	rm -rf build html latex ../odevzdani ../*.zip $(PROF_DIR)
-=======
-	rm -rf build-test build html latex installer ../install ../odevzdani ../*.zip
->>>>>>> origin/main
+	rm -rf build-test build html latex installer ../install ../odevzdani ../*.zip $(PROF_DIR)
 
 clean_user_doc:
 	cd ../doc && make purge
