@@ -80,9 +80,10 @@ run: $(PROJ)
 pack: purge doc user_doc installer installer-prof clean
 	mkdir -p ../odevzdani/repo
 	cd ../doc && make purge
-	mv -r ../install ../odevzdani
-	mv repo/src/html ../odevzdani/doc
-	cd .. && rsync -a --exclude="odevzdani/" * odevzdani/repo
+	mv ../install ../odevzdani
+	mv html ../odevzdani/doc
+	rm -fr stddev installer-dep installer-$(PROFILE)-dep installer
+	cd .. && rsync -a --exclude="doc odevzdani/" * odevzdani/repo
 	cd ../odevzdani && zip -r $(ZIP) * && mv $(ZIP) ..
 
 # pack minimal version for VUT IS
