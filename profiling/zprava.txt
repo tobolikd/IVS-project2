@@ -1,0 +1,4 @@
+Z grafu volání jde vidět, že největší je paměťová náročnost a program nejvíce časiu tráví alokací nových zdrojů.
+
+Případná optimalizace by se tedy měla zaměřit na efektivnější uložení dat - například std::array je rychlejší než std::vector a případně serializovat načítání vstupu a počítání sumy, čímž by se zmenšila paměťová náročnost.
+
