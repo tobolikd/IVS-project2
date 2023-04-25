@@ -83,7 +83,7 @@ pack: purge doc user_doc installer installer-prof clean
 	mv ../install ../odevzdani
 	mv html ../odevzdani/doc
 	rm -fr stddev installer-dep installer-$(PROFILE)-dep installer
-	cd .. && rsync -a --exclude="odevzdani/" --exclude="doc" * odevzdani/repo
+	cd .. && rsync -a --exclude="odevzdani/" --exclude="doc" * .* odevzdani/repo
 	cd ../odevzdani && zip -r $(ZIP) * && mv $(ZIP) ..
 
 # pack minimal version for VUT IS
