@@ -35,7 +35,7 @@ gui:
 	$(QMAKE_PATH) ../calculator.pro $(QMFLAGS) && \
 	make
 
-installer: clean
+installer: clean user_doc
 	sudo apt install -y $(INSTALLER_DEPS)
 	mkdir -p installer/$(PACKAGE_NAME)
 	mkdir -p ../install/
