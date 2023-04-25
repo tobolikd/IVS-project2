@@ -1,0 +1,4 @@
+xtobol06 90 (makefile, testy, instalator profilingu)
+xhalen00 100 (matematicka knihovna)
+xsteti05 105 (instalator kalkulacky, GUI, uzivatelska dokumentace, mockup, profiling)
+xtesar43 105 (programova dokumentace, debugging)

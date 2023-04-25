@@ -1,6 +1,22 @@
-# IVS
+# Prostredi
 
-## Git workflow
+Ubuntu 64bit
+
+# Autori
+
+Tym: xplagiat, xroznuk, xcopilot, xchatgpt
+
+ - xtobol06 David Tobolik
+ - xhalen00 Timotej Halenar
+ - xsteti05 Jakub Stetina
+ - xtesar43 Lukas Tesar
+
+# License
+
+Tento program je poskytovan s licenci GPLv3.
+Cele zneni je v souboru LICENSE.
+
+# Git workflow
  - main branch is protected and can be accessed only via pull requests
  - main branch **must** be compilable and functional
  - every major bug, feature or task should have its own branch
@@ -10,7 +26,7 @@
  - all merges to main must have *clean* git history
  - pull requests to main are rebased
 
-### recomended git message format
+## recomended git message format
 ```
 tag: description
 
