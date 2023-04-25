@@ -1,0 +1,13 @@
+Source: stddev
+Section: science
+Priority: extra
+Maintainer: David Tobolík <xtobol06@stud.fit.vut.cz>
+Rules-Requires-Root: no
+Build-Depends:debhelper-compat (= 13),
+
+Package: stddev
+Architecture: any
+Depends:
+ ${shlibs:Depends},
+ ${misc:Depends},
+Description: CLI program for computing standard deviation
