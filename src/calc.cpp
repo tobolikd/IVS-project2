@@ -359,6 +359,7 @@ void calc::updateUserInput(QString qstr)
     }
 
     if(this->result){
+        this->userInputStr = "";
         this->result = false;
     }
    
