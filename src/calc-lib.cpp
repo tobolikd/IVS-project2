@@ -16,16 +16,26 @@
 #include <stack>
 #include <cmath>
 #include <stdexcept>
-#include <exception>
 
 
 #include "calc-lib.hpp"
 
 using namespace std;
 
-double root(double num, double n_){
-    if (n_ < 0)
-        throw runtime_error("Negative root base");
+double root(double num, double n_) {
+    double intpart = 0.0;
+    double fracpart = std::modf(n_, &intpart);
+
+    if (fracpart != 0) {
+        throw std::runtime_error("Not an integer in root\n");
+    }
+
+    if (num < 0) {
+        if ((int(intpart) % 2) == 0 || intpart < 0) {
+        throw std::runtime_error("Negative num and even n\n");
+        }
+    }
+    
 
     double x;
     double A(num);
@@ -42,15 +52,16 @@ double root(double num, double n_){
 }
 
 double factorial(double x) {
-    if (x < 0)
-        throw std::runtime_error("Negative factorial");
-    if (x == 0)
-        return 1;
-
     double intpart = 0.0;
     double fracpart = std::modf(x, &intpart);
     if (fracpart != 0) {
         throw std::runtime_error("Not an integer in factorial\n");
+    }
+    if (x == 0) {
+        return 1;
+    }
+    if (x < 0) {
+        throw std::runtime_error("Negative integer in factorial\n");
     }
     for (unsigned int i=x-1; i>0; i--){
         x=x*i;
@@ -59,6 +70,12 @@ double factorial(double x) {
 }
 
 double binomial_coefficient(double n, double k) {
+    if (n < k) {
+        throw std::runtime_error("Invalid expression\n");
+    }
+    if (n == k) {
+        return 1;
+    }
     return factorial(n)/(factorial(k)*factorial(n-k));
 }
 
@@ -133,7 +150,7 @@ std::vector<token_t> getHandle(std::vector<token_t> *stack){
     return handle;
 
 }
-
+ 
 /**
  * @brief Performs calculation, creates token with result, and inserts it back into stack
  *
@@ -153,7 +170,6 @@ void calculateHandle(std::vector<token_t> *stack, std::vector<token_t> handle){
         else {
             throw std::runtime_error("Invalid expression\n");
         }
-
     }
     else if (handle.size() == 2){
         if (handle[0].type == EXPR_T && handle[1].type == FAC_T){
@@ -317,7 +333,6 @@ double evaluateExpression(std::vector<token_t> expression){
     {'>', '<', '<', '>', '<', '>', '<', '>', '<', '<', '<', '>'}, // C
     };
 
-
     vector<token_t> token_stack;
     vector<token_t> handle;
     token_t bottom_element;
@@ -329,7 +344,6 @@ double evaluateExpression(std::vector<token_t> expression){
 
 
     while(!(token_stack.size() == 2 && token_stack.front().type == EXPR_T && token_stack[1].type == END_T && input.type == END_T)){
-
         switch (p_table[topTerminal(token_stack).type][input.type]){
             case '<':
                 insertHandleStart(&token_stack);
