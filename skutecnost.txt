@@ -1,0 +1,52 @@
+Skutecnost oproti puvodnimu planu
+
+
+Úkoly
+ - makefile - xtobol06
+ - dokumentace
+   - programová - xtesar43
+   - uživatelská - xsteti05
+ - testy - xtobol06
+ - knihovna - xhalen00
+ - GUI - xsteti05
+ - mockup - xsteti05
+ - instalátory - xsteti05, xtobol06
+ - profiling - xsteti05
+ - debugging - xtesar43
+
+Terminy
+
+  Byli jsme tyden pozadu oproti planu
+  V poslednim tydnu probihala integrace vsech casti
+
+1. týden - do 22. 3.
+
+2. týden - do 29. 3.
+ - doxyfile
+ - makefile
+
+3. týden - do 5. 4.
+ - vývoj knihovny
+ - testy + rozhraní
+ - GUI
+
+4. týden - do 12. 4.
+ - vývoj knihovny
+ - další testy podle potřeby
+ - uživatelská dokumentace
+ - napojení na GUI
+
+5. týden - do 19. 4.
+ - mockup
+ - vývoj knihovny - pokrocile
+ - debugging
+ - profiling
+
+6. týden - do 25. 4. - ODEVZDÁNÍ
+ - instalátory
+ - integrace
+ - debugging
+ - zkouška instalace
+ - doladění detailů
+ - odevzdání
+
