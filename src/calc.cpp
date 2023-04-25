@@ -218,7 +218,8 @@ void calc::evalInput()
         resultStr = std::to_string(resultDouble);
         
         // remove trailing zeroes
-        resultStr = std::regex_replace(resultStr, std::regex("([[:digit:]]*\\.[[:digit:]]*?)0+$"), "$1");
+        resultStr = std::regex_replace(resultStr, std::regex("\\.0*$"), "");
+        resultStr = std::regex_replace(resultStr, std::regex("\\.((?:[0-9])*?)(0*)$"), ".$1");
         this->prevAnswer = resultStr;
 
     } catch (const std::exception& e) {
