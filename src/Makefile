@@ -126,7 +126,7 @@ doc:
 	doxygen
 
 user_doc:
-	cd ../doc && make && mv dokumentace.pdf ../
+	cd ../doc && make && cp dokumentace.pdf ../
 
 -include $(DEPS)
 
