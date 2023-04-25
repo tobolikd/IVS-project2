@@ -1,0 +1,3 @@
+install/calculator.desktop /usr/share/applications
+install/calculator.png /usr/share/pixmaps
+install/dokumentace.pdf /opt/calculator/

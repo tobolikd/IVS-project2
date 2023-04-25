@@ -3,16 +3,16 @@ cmake_minimum_required(VERSION 3.14)
 project(IVS-tests)
 
 file(GLOB PROJECT_FILES
-    "calc*.cpp"
+    "calc-*.cpp"
 )
 
 FILE(GLOB UNIT_TESTS
     "tests/*.cpp"
 )
 
-
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
 
 include(FetchContent)
 FetchContent_Declare(
@@ -34,4 +34,3 @@ target_link_libraries(tests-all projectFiles)
 
 include (GoogleTest)
 gtest_discover_tests(tests-all)
-

@@ -1,8 +1,12 @@
 PROJ = calc
 PROFILE = prof
+GUI = gui
+GUI = gui
 ZIP = xtobol06_xtesar43_xsteti05_xhalen00.zip
 CC = gcc
 CFLAGS = -Wall -std=c++20 -MMD
+QMFLAGS = -spec linux-g++ CONFIG+=qtquickcompiler
+QMFLAGS = -spec linux-g++ CONFIG+=qtquickcompiler
 LDLIBS = -lstdc++
 
 PROJ_SRCS = $(wildcard $(PROJ)*.cpp)
@@ -18,9 +22,38 @@ OBJS = $(PROJ_OBJS) $(PROFILE_OBJS)
 
 PROF_DIR = ../profiling
 
-.PHONY: clean all
+QMAKE_PATH = qmake
 
-all: $(PROJ) $(PROFILE)
+PACKAGE_NAME = calculator-1.0
+
+
+.PHONY: clean all gui
+
+gui:
+	mkdir -p build
+	cd build && \
+	$(QMAKE_PATH) ../calculator.pro $(QMFLAGS) && \
+	make
+
+installer:
+	sudo apt install -y $(INSTALLER_DEPS)
+	mkdir -p installer/$(PACKAGE_NAME)
+	mkdir -p ../install/
+	cp ../doc/dokumentace.pdf installer-dep/install
+	cp *.cpp *.hpp *.h *.ui calculator.pro installer/$(PACKAGE_NAME)/ && \
+	cd installer && \
+	tar -zcvf $(PACKAGE_NAME).tar.gz $(PACKAGE_NAME) && \
+	cd $(PACKAGE_NAME) && \
+	cp ../../installer-dep/install -r . && \
+	dh_make -n -s -c gpl3 -f ../$(PACKAGE_NAME).tar.gz -y && \
+	cp ../../installer-dep/debian/* ./debian/ && \
+	dpkg-buildpackage -rfakeroot -uc -b && \
+	cd .. && cp calculator_1.0_amd64.deb ../../install/
+
+run-gui: gui
+	./build/Calculator
+
+all: $(PROJ) $(PROFILE) $(GUI)
 
 $(PROJ): $(OBJS)
 $(PROFILE): $(PROFILE_OBJS)
@@ -43,8 +76,10 @@ pack_is:
 	cd .. && zip -r $(ZIP) hodnoceni.txt src dokumentace.pdf odevzdani.txt
 
 test:
-	mkdir -p build
-	cd build && cmake .. && cmake --build . && ./tests-all
+	mkdir -p build-tests
+	cd build-tests && cmake .. && cmake --build . && ./tests-all
+	mkdir -p build-tests
+	cd build-tests && cmake .. && cmake --build . && ./tests-all
 
 prof: stddev.cpp calc-lib.cpp
 	g++ $(CFLAGS)  stddev.cpp calc-lib.cpp -o stddev;
@@ -85,7 +120,11 @@ user_doc:
 
 clean: clean_user_doc
 	rm -f $(EXECS) $(OBJS) $(DEPS)
+<<<<<<< HEAD
 	rm -rf build html latex ../odevzdani ../*.zip $(PROF_DIR)
+=======
+	rm -rf build-test build html latex installer ../install ../odevzdani ../*.zip
+>>>>>>> origin/main
 
 clean_user_doc:
 	cd ../doc && make purge

@@ -1,0 +1,9 @@
+[Desktop Entry]
+Categories=Utility;Science;Qt;
+Exec=/usr/bin/calculator
+GenericName=Basic calculator
+Icon=/usr/share/pixmaps/calculator.png
+Name=Calculator
+Terminal=false
+Version=1.0
+Type=Application
