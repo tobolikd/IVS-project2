@@ -354,12 +354,12 @@ double evaluateExpression(std::vector<token_t> expression){
             case '>':
                 handle = getHandle(&token_stack);
                 calculateHandle(&token_stack, handle);
-                break;    
+                break;
             case '=':
                 token_stack.insert(token_stack.begin(), input);
                 input = expression.front();
                 expression.erase(expression.begin());
-                break;      
+                break;
             case 'x':
                 throw std::runtime_error("Invalid expression\n");
                 break;
