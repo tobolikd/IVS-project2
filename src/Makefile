@@ -24,7 +24,6 @@ PACKAGE_NAME = calculator-1.0
 INSTALLER_DEPS = qt6-base-dev qtbase5-dev
 
 PROFILER_NAME = stddev-1.0
-PROFILER_SOURCES = $(PROFILE).cpp calc-lib.hpp
 
 .PHONY: clean all gui
 
@@ -51,15 +50,14 @@ installer: clean
 installer-prof: clean profile
 	mkdir -p installer/$(PROFILER_NAME)
 	mkdir -p ../install/
-	cp $(PROFILER_SOURCES) installer/$(PROFILER_NAME)/ && \
+	mkdir -p installer-$(PROFILE)-dep/install && \
+	cp $(PROFILE) installer-$(PROFILE)-dep/install && \
 	cd installer && \
 	tar -zcvf $(PROFILER_NAME).tar.gz $(PROFILER_NAME) && \
 	cd $(PROFILER_NAME) && \
 	cp -r ../../installer-$(PROFILE)-dep/install . && \
 	dh_make -n -s -c gpl3 -f ../$(PROFILER_NAME).tar.gz -y && \
 	cp ../../installer-$(PROFILE)-dep/debian/* ./debian/ && \
-	mkdir -p ./debian/usr/bin && \
-	cp $(PROFILE) ./debian/usr/bin && \
 	dpkg-buildpackage -rfakeroot -uc -b && \
 	cd .. && cp *.deb ../../install/
 
